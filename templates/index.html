@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descargador Universal de Videos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #1a73e8;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        input[type="text"]:focus {
+            border-color: #1a73e8;
+            outline: none;
+        }
+        button {
+            background-color: #1a73e8;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #1557b0;
+        }
+        .message {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info-text {
+            text-align: center;
+            color: #666;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .loading:after {
+            content: '.';
+            animation: dots 1s steps(5, end) infinite;
+        }
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60% { content: '...'; }
+            80% { content: '....'; }
+            100% { content: '.....'; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Descargador Universal de Videos</h1>
+        <form action="/" method="POST">
+            <div class="form-group">
+                <input type="text" name="link" placeholder="Introduce la URL del video" required>
+            </div>
+            <button type="submit">Descargar Video</button>
+        </form>
+
+        {% if message %}
+            <div class="message {% if status == 'success' %}success{% else %}error{% endif %}">
+                {{ message }}
+            </div>
+        {% endif %}
+
+        {% if status == 'success' and video_file %}
+            <div class="message success">
+                ¡Video descargado exitosamente!
+                <br>
+                <a href="{{ video_file }}" download>Haz clic aquí para descargar el video</a>
+            </div>
+        {% endif %}
+
+        <div class="loading" id="loadingIndicator">Cargando<span class="dots"></span></div>
+
+        <div class="info-text">
+            <p>Este descargador es compatible con varios sitios de videos. Simplemente pega la URL y empieza la descarga.</p>
+        </div>
+    </div>
+
+    <script>
+        // Muestra el indicador de carga mientras se espera la respuesta
+        document.querySelector('form').addEventListener('submit', function() {
+            document.getElementById('loadingIndicator').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
