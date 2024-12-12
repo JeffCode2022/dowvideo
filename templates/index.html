@@ -82,7 +82,7 @@
             margin-top: 20px;
         }
         .loading:after {
-            content: '.';
+            content: '.'; 
             animation: dots 1s steps(5, end) infinite;
         }
         @keyframes dots {
@@ -96,40 +96,24 @@
 </head>
 <body>
     <div class="container">
-        <h1>Descargador Universal de Videos</h1>
-        <form action="/" method="POST">
+        <h1>Descargador de Videos</h1>
+        <form method="POST">
             <div class="form-group">
-                <input type="text" name="link" placeholder="Introduce la URL del video" required>
+                <input type="text" name="link" placeholder="Ingresa el enlace del video" required>
             </div>
             <button type="submit">Descargar Video</button>
         </form>
 
         {% if message %}
-            <div class="message {% if status == 'success' %}success{% else %}error{% endif %}">
+            <div class="message {{ status }}">
                 {{ message }}
             </div>
         {% endif %}
-
-        {% if status == 'success' and video_file %}
-            <div class="message success">
-                ¡Video descargado exitosamente!
-                <br>
-                <a href="{{ video_file }}" download>Haz clic aquí para descargar el video</a>
-            </div>
-        {% endif %}
-
-        <div class="loading" id="loadingIndicator">Cargando<span class="dots"></span></div>
-
-        <div class="info-text">
-            <p>Este descargador es compatible con varios sitios de videos. Simplemente pega la URL y empieza la descarga.</p>
+        
+        {% if file_path %}
+        <div class="message success">
+            Video descargado exitosamente. <a href="{{ url_for('download', filename=file_path.split('/')[-1]) }}" target="_blank">Haz clic aquí para descargar el video.</a>
         </div>
-    </div>
-
-    <script>
-        // Muestra el indicador de carga mientras se espera la respuesta
-        document.querySelector('form').addEventListener('submit', function() {
-            document.getElementById('loadingIndicator').style.display = 'block';
-        });
-    </script>
+    {% endif %}
 </body>
 </html>

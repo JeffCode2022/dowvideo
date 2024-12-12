@@ -4,8 +4,6 @@ import yt_dlp
 import os
 from urllib.parse import urlparse
 import time
-import shutil
-
 
 app = Flask(__name__)
 
@@ -18,9 +16,9 @@ def is_valid_url(url):
 
 def download_video(url, output_path):
     ydl_opts = {
-        'format': 'best',
+        'format': 'best',  # Descarga la mejor calidad disponible
         'outtmpl': os.path.join(output_path, '%(title)s.%(ext)s'),
-        'noplaylist': True,
+        'noplaylist': True,  # No descargar playlists completas
         'extract_flat': False,
         'quiet': True,
         'no_warnings': True,
@@ -32,22 +30,11 @@ def download_video(url, output_path):
             info = ydl.extract_info(url, download=False)
             # Descargar el video
             ydl.download([url])
-            
-            # Una vez descargado, movemos el archivo a un lugar accesible
-            video_filename = os.path.join(output_path, f"{info['title']}.{info['ext']}")
-            
-            # Asegurarse de que el archivo existe
-            if os.path.exists(video_filename):
-                return {
-                    'success': True,
-                    'video_file': video_filename,  # Retornar la ruta del video
-                    'message': 'Video descargado exitosamente'
-                }
-            else:
-                return {
-                    'success': False,
-                    'message': 'No se pudo encontrar el archivo descargado.'
-                }
+            return {
+                'success': True,
+                'title': info.get('title', 'Video'),
+                'message': 'Video descargado exitosamente'
+            }
         except Exception as e:
             return {
                 'success': False,
