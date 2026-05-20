@@ -1,6 +1,6 @@
-# Descargador Universal de Videos
+# FlowGet - Descargador Universal de Videos y Audio
 
-Una aplicación web simple y eficiente para descargar videos de múltiples plataformas, construida con Flask y yt-dlp.
+Una aplicación web ultra-premium, moderna y eficiente para descargar videos y audios de múltiples plataformas, construida con Flask y yt-dlp bajo una estética minimalista y limpia.
 
 ## 🚀 Características
 

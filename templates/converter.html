@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ FlowGet - Convertidor Premium Multiformato</title>
+    <meta name="description" content="Convierte videos y audios a cualquier formato digital de alta fidelidad. MP4, WebM, MKV, AVI, MP3, WAV, FLAC, AAC, OGG. Conversión premium directa sin pérdida de calidad.">
+    
+    <!-- Google Fonts: Geist for premium bold typography & Caveat for handwritten details -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Geist:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- GSAP for interactive animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <style>
+        /* Light Mode Premium Styling System */
+        :root {
+            --bg-primary: #f6f5f4;
+            --accent-orange: #ff6321;
+            --accent-indigo: #5d5fef;
+            --text-primary: #0a0a0c;
+            --text-secondary: #27272a;
+            --text-muted: #71717a;
+            --glass-bg: rgba(255, 255, 255, 0.65);
+            --glass-border: rgba(9, 9, 11, 0.06);
+            --glass-shadow: rgba(0, 0, 0, 0.04);
+            --inset-highlight: rgba(255, 255, 255, 0.85);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Geist', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+            background-image: radial-gradient(rgba(9, 9, 11, 0.05) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        /* 3D Pastel Background Orbs */
+        .bg-orbs-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.16;
+            mix-blend-mode: multiply;
+            animation: orbFloat 24s infinite alternate ease-in-out;
+        }
+
+        .orb-orange {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--accent-orange) 0%, transparent 80%);
+            top: -200px;
+            right: -150px;
+        }
+
+        .orb-indigo {
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, var(--accent-indigo) 0%, transparent 80%);
+            bottom: 5%;
+            left: -250px;
+            animation-duration: 30s;
+            animation-delay: -6s;
+        }
+
+        @keyframes orbFloat {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            100% { transform: translate(100px, 80px) scale(1.1) rotate(30deg); }
+        }
+
+        /* Floating Navbar */
+        header {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1200px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px) saturate(190%);
+            -webkit-backdrop-filter: blur(25px) saturate(190%);
+            border: 1px solid var(--glass-border);
+            border-radius: 100px;
+            padding: 14px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.03),
+                        inset 0 1px 0 var(--inset-highlight);
+        }
+
+        .logo-container {
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            color: var(--text-primary);
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            text-decoration: none;
+        }
+
+        .logo-container span {
+            color: var(--accent-orange);
+        }
+
+        nav {
+            display: flex;
+            gap: 32px;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: color 0.25s ease;
+            position: relative;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--accent-orange);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent-orange);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        nav a:hover::after, nav a.active::after {
+            width: 16px;
+        }
+
+        .nav-btn {
+            background: #09090b;
+            border: 1px solid #09090b;
+            color: #ffffff;
+            padding: 9px 20px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            background: var(--accent-orange);
+            border-color: var(--accent-orange);
+            box-shadow: 0 6px 18px rgba(255, 99, 33, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 170px 24px 80px;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(93, 95, 239, 0.06);
+            border: 1px solid rgba(93, 95, 239, 0.15);
+            color: var(--accent-indigo);
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            font-size: 3.8rem;
+            font-weight: 900;
+            color: var(--text-primary);
+            line-height: 1.1;
+            letter-spacing: -0.04em;
+            margin-bottom: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero h1 span {
+            color: var(--accent-indigo);
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero p.subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 60px;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        /* Converter Container */
+        .converter-outer-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 780px;
+            margin: 0 auto;
+        }
+
+        /* Mouse spotlight */
+        .converter-spotlight {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(93, 95, 239, 0.12) 0%, rgba(255, 99, 33, 0.04) 50%, transparent 100%);
+            top: -200px;
+            left: -200px;
+            pointer-events: none;
+            z-index: 1;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .converter-outer-wrapper:hover .converter-spotlight {
+            opacity: 1;
+        }
+
+        /* Handwritten annotation */
+        .handwritten-arrow-wrapper {
+            position: absolute;
+            right: 25px;
+            top: -65px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            pointer-events: none;
+            user-select: none;
+            z-index: 20;
+        }
+
+        .handwritten-arrow-wrapper svg {
+            width: 45px;
+            height: 45px;
+            transform: scaleX(-1) rotate(60deg);
+            opacity: 0.85;
+            color: var(--accent-indigo);
+        }
+
+        .handwritten-text {
+            font-family: 'Caveat', cursive;
+            font-size: 1.8rem;
+            color: var(--accent-indigo);
+            transform: rotate(-4deg);
+            white-space: nowrap;
+            text-shadow: 0 0 15px rgba(93, 95, 239, 0.1);
+        }
+
+        /* Glassmorphic Card */
+        .converter-card-glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(35px) saturate(190%);
+            -webkit-backdrop-filter: blur(35px) saturate(190%);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: 35px;
+            box-shadow: 0 30px 60px var(--glass-shadow),
+                        inset 0 1px 0 var(--inset-highlight);
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+            text-align: left;
+        }
+
+        /* Supported formats banner */
+        .formats-banner {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .format-chip {
+            background: rgba(255, 255, 255, 0.75);
+            border: 1px solid rgba(9, 9, 11, 0.05);
+            border-radius: 10px;
+            padding: 8px 14px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: default;
+        }
+
+        .format-chip:hover {
+            background: rgba(93, 95, 239, 0.06);
+            border-color: rgba(93, 95, 239, 0.15);
+            color: var(--accent-indigo);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(93, 95, 239, 0.08);
+        }
+
+        .format-chip.video-chip:hover {
+            background: rgba(255, 99, 33, 0.06);
+            border-color: rgba(255, 99, 33, 0.15);
+            color: var(--accent-orange);
+            box-shadow: 0 4px 12px rgba(255, 99, 33, 0.08);
+        }
+
+        /* Input bar */
+        .input-bar-container {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(9, 9, 11, 0.08);
+            border-radius: 16px;
+            padding: 8px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 5;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.01);
+        }
+
+        .input-bar-container:focus-within {
+            border-color: var(--accent-indigo);
+            box-shadow: 0 0 18px rgba(93, 95, 239, 0.08), inset 0 1px 2px rgba(0, 0, 0, 0.01);
+            background: #ffffff;
+        }
+
+        .input-bar-icon {
+            padding: 0 14px;
+            color: #71717a;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-bar-container input[type="text"] {
+            flex-grow: 1;
+            width: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 10px 0;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: 'Geist', sans-serif;
+            font-weight: 500;
+        }
+
+        .input-bar-container input[type="text"]::placeholder {
+            color: #a1a1aa;
+        }
+
+        .btn-paste {
+            background: #ffffff;
+            border: 1px solid rgba(9, 9, 11, 0.08);
+            color: var(--text-secondary);
+            padding: 10px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .btn-paste:hover {
+            background: rgba(93, 95, 239, 0.05);
+            border-color: var(--accent-indigo);
+            color: var(--accent-indigo);
+        }
+
+        /* Fetch info button */
+        .btn-fetch {
+            width: 100%;
+            background: var(--accent-indigo);
+            color: #ffffff;
+            border: none;
+            padding: 16px;
+            font-size: 1rem;
+            font-weight: 750;
+            border-radius: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 8px 22px rgba(93, 95, 239, 0.25);
+            position: relative;
+            z-index: 5;
+            transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+            margin-bottom: 20px;
+        }
+
+        .btn-fetch:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(93, 95, 239, 0.38);
+            filter: brightness(1.05);
+        }
+
+        .btn-fetch:active {
+            transform: scale(0.98);
+        }
+
+        /* Notifications */
+        .msg-box {
+            display: none;
+            margin-top: 16px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            z-index: 5;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .msg-box.error {
+            background: rgba(239, 68, 68, 0.06);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            color: #ea3838;
+        }
+
+        .msg-box.success {
+            background: rgba(16, 185, 129, 0.06);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+            color: #0d9464;
+        }
+
+        /* Status / Loader */
+        .status-box {
+            display: none;
+            margin-top: 20px;
+            padding: 24px;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(9, 9, 11, 0.05);
+            border-radius: 18px;
+            text-align: center;
+            position: relative;
+            z-index: 5;
+        }
+
+        .spinner-cyber {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(9, 9, 11, 0.03);
+            border-radius: 50%;
+            border-top-color: var(--accent-indigo);
+            border-right-color: var(--accent-orange);
+            animation: spin 0.85s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        .status-txt-main {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .status-txt-sub {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(9, 9, 11, 0.03);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 16px;
+        }
+
+        .progress-bar-liquid {
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--accent-indigo), var(--accent-orange), transparent);
+            animation: pulse-move 1.5s infinite linear;
+        }
+
+        /* Video preview */
+        .preview-box {
+            display: none;
+            margin-top: 24px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(9, 9, 11, 0.06);
+            border-radius: 20px;
+            padding: 20px;
+            position: relative;
+            z-index: 5;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.015);
+            animation: slideDown 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .preview-header {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            align-items: center;
+        }
+
+        .preview-thumbnail-container {
+            flex-shrink: 0;
+            width: 120px;
+            height: 70px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(9, 9, 11, 0.06);
+        }
+
+        .preview-thumbnail-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-details {
+            flex-grow: 1;
+        }
+
+        .preview-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            line-height: 1.4;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .preview-meta-grid {
+            display: flex;
+            gap: 8px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .preview-badge {
+            background: rgba(9, 9, 11, 0.02);
+            border: 1px solid rgba(9, 9, 11, 0.04);
+            border-radius: 8px;
+            padding: 3px 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+        }
+
+        /* Converter Controls */
+        .converter-section {
+            padding: 24px;
+            background: rgba(93, 95, 239, 0.03);
+            border: 1px solid rgba(93, 95, 239, 0.08);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .converter-title-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .converter-sparkle {
+            font-size: 1.25rem;
+            animation: pulse-sparkle 1.8s infinite;
+        }
+
+        @keyframes pulse-sparkle {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.15); }
+        }
+
+        .converter-section h4 {
+            font-family: 'Geist', sans-serif;
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+            margin: 0;
+        }
+
+        .converter-sub {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .converter-controls-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .control-group label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .control-group select {
+            padding: 10px 14px;
+            font-family: 'Geist', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(9, 9, 11, 0.08);
+            border-radius: 12px;
+            color: var(--text-primary);
+            outline: none;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .control-group select:focus {
+            border-color: var(--accent-indigo);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(93, 95, 239, 0.08);
+        }
+
+        .btn-convert-submit {
+            margin-top: 4px;
+            width: 100%;
+            padding: 14px 20px;
+            font-family: 'Geist', sans-serif;
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: #fff;
+            background: linear-gradient(135deg, #6366f1, #5d5fef, #4f46e5);
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 18px rgba(93, 95, 239, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-convert-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(93, 95, 239, 0.3);
+            filter: brightness(1.05);
+        }
+
+        .btn-convert-submit:active {
+            transform: translateY(0);
+        }
+
+        /* Features mini-cards */
+        .converter-features {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 80px auto 0;
+            padding: 0 24px;
+            text-align: center;
+        }
+
+        .converter-features h2 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .converter-features p.section-sub {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 48px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 500;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            text-align: left;
+        }
+
+        .feature-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px) saturate(190%);
+            -webkit-backdrop-filter: blur(24px) saturate(190%);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.02),
+                        inset 0 1px 0 var(--inset-highlight);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(93, 95, 239, 0.25), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(93, 95, 239, 0.15);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.05), inset 0 1px 0 var(--inset-highlight);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon-wrapper {
+            width: 48px;
+            height: 48px;
+            background: rgba(93, 95, 239, 0.05);
+            border: 1px solid rgba(93, 95, 239, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-indigo);
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon-wrapper {
+            background: var(--accent-indigo);
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(93, 95, 239, 0.3);
+            transform: scale(1.05);
+        }
+
+        .feature-card h3 {
+            font-size: 1.15rem;
+            font-weight: 850;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        /* Floating assets */
+        .floating-asset {
+            position: absolute;
+            width: 56px;
+            height: 56px;
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(12px) saturate(180%);
+            -webkit-backdrop-filter: blur(12px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05),
+                        inset 0 2px 5px rgba(255, 255, 255, 0.6);
+            z-index: 5;
+            transition: all 0.4s ease;
+            pointer-events: auto;
+            cursor: pointer;
+        }
+
+        .floating-asset svg {
+            width: 26px;
+            height: 26px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+            transition: transform 0.3s ease;
+        }
+
+        .floating-asset:hover {
+            transform: scale(1.15) translateY(-5px) rotate(8deg) !important;
+            background: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 15px 35px rgba(93, 95, 239, 0.15),
+                        inset 0 2px 5px rgba(255, 255, 255, 0.8);
+        }
+
+        @keyframes float-y-1 {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(4deg); }
+        }
+        @keyframes float-y-2 {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(-6deg); }
+        }
+        @keyframes float-y-3 {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(8deg); }
+        }
+
+        .pos-left-top {
+            left: -80px;
+            top: 20px;
+            animation: float-y-1 6s ease-in-out infinite;
+        }
+        .pos-right-top {
+            right: -80px;
+            top: 50px;
+            animation: float-y-2 7s ease-in-out infinite;
+            animation-delay: 1s;
+        }
+        .pos-left-mid {
+            left: -110px;
+            top: 200px;
+            animation: float-y-3 5.5s ease-in-out infinite;
+            animation-delay: 0.5s;
+        }
+        .pos-right-mid {
+            right: -110px;
+            top: 240px;
+            animation: float-y-1 6.5s ease-in-out infinite;
+            animation-delay: 1.5s;
+        }
+
+        @media(max-width: 1024px) {
+            .floating-asset {
+                display: none !important;
+            }
+        }
+
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 120px auto 40px;
+            padding: 40px 24px 0;
+            border-top: 1px solid rgba(9, 9, 11, 0.04);
+        }
+
+        .footer-grid {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        .footer-logo {
+            font-family: 'Geist', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--text-primary);
+            letter-spacing: -0.04em;
+        }
+
+        .footer-logo span {
+            color: var(--accent-orange);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 28px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: color 0.2s ease;
+            font-weight: 600;
+        }
+
+        .footer-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: #a1a1aa;
+            padding-top: 20px;
+            border-top: 1px solid rgba(9, 9, 11, 0.02);
+            font-weight: 500;
+        }
+
+        .footer-socials {
+            display: flex;
+            gap: 16px;
+        }
+
+        .footer-socials a {
+            color: #a1a1aa;
+            transition: color 0.2s ease;
+        }
+
+        .footer-socials a:hover {
+            color: var(--accent-indigo);
+        }
+
+        /* Animations */
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes pulse-move {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(200%); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media(max-width: 992px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media(max-width: 768px) {
+            .handwritten-arrow-wrapper {
+                display: none;
+            }
+            header {
+                padding: 10px 20px;
+            }
+            nav {
+                display: none;
+            }
+            .hero {
+                padding: 140px 16px 60px;
+            }
+            .hero h1 {
+                font-size: 2.3rem;
+            }
+            .converter-card-glass {
+                padding: 24px 18px;
+            }
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            .converter-controls-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer-grid {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .footer-links {
+                flex-wrap: wrap;
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Dynamic 3D Blur Orbs -->
+    <div class="bg-orbs-container">
+        <div class="bg-orb orb-orange"></div>
+        <div class="bg-orb orb-indigo"></div>
+    </div>
+
+    <!-- Floating Navbar -->
+    <header>
+        <a href="/" class="logo-container">
+            Flow<span>Get</span> ⚡
+        </a>
+        <nav>
+            <a href="/">Inicio</a>
+            <a href="/#features">Características</a>
+            <a href="/#platforms">Plataformas</a>
+            <a href="/converter" class="active">Convertidor</a>
+            <a href="/#soporte">Soporte</a>
+        </nav>
+        <a href="/" class="nav-btn">Descargar</a>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;margin-right:4px;display:inline-block;vertical-align:middle;">
+                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38"/>
+            </svg>
+            Convertidor Premium Multiformato
+        </div>
+        <h1>Convierte a cualquier <span>formato</span></h1>
+        <p class="subtitle">Transforma tus videos y audios a MP4, WebM, MKV, AVI, MP3, WAV, FLAC, AAC u OGG con calidad de estudio. Conversión directa en el servidor sin pérdida.</p>
+
+        <!-- Converter Component Wrapper -->
+        <div class="converter-outer-wrapper">
+            
+            <!-- Mouse spotlight -->
+            <div class="converter-spotlight" id="cv-spotlight"></div>
+
+            <!-- Floating assets -->
+            <div class="floating-asset pos-left-top" title="Video Formats">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-indigo)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2" ry="2"/></svg>
+            </div>
+            <div class="floating-asset pos-right-top" title="Audio Formats">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-orange)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+            </div>
+            <div class="floating-asset pos-left-mid" title="Conversión HD">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+            </div>
+            <div class="floating-asset pos-right-mid" title="Alta Fidelidad">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M8 13h8"/><path d="M8 17h8"/></svg>
+            </div>
+
+            <!-- Converter Main Card -->
+            <div class="converter-card-glass">
+
+                <!-- Supported formats banner -->
+                <div class="formats-banner">
+                    <div class="format-chip video-chip">MP4</div>
+                    <div class="format-chip video-chip">WebM</div>
+                    <div class="format-chip video-chip">MKV</div>
+                    <div class="format-chip video-chip">AVI</div>
+                    <div class="format-chip">MP3</div>
+                    <div class="format-chip">WAV</div>
+                    <div class="format-chip">FLAC</div>
+                    <div class="format-chip">AAC</div>
+                    <div class="format-chip">OGG</div>
+                </div>
+
+                <!-- URL Input -->
+                <div class="input-bar-container">
+                    <div class="input-bar-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                    </div>
+                    <input type="text" id="converter-url" placeholder="Pega el enlace del video que quieres convertir..." required autocomplete="off">
+                    <button class="btn-paste" onclick="pasteFromClipboard()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;margin-right:4px;display:inline-block;vertical-align:middle;"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path></svg> Pegar
+                    </button>
+                </div>
+
+                <!-- Fetch button -->
+                <button class="btn-fetch" id="btn-fetch" onclick="fetchVideoInfo()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:4px;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    Analizar Video
+                </button>
+
+                <!-- Notification Messages -->
+                <div class="msg-box" id="message-box"></div>
+
+                <!-- Status / Loader -->
+                <div class="status-box" id="status-container">
+                    <div class="spinner-cyber"></div>
+                    <div class="status-txt-main" id="status-text">Procesando enlace...</div>
+                    <div class="status-txt-sub" id="status-sub">Analizando formatos disponibles</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-liquid"></div>
+                    </div>
+                </div>
+
+                <!-- Video Preview -->
+                <div class="preview-box" id="preview-card">
+                    <div class="preview-header">
+                        <div class="preview-thumbnail-container">
+                            <img src="" alt="Miniatura" class="preview-thumbnail-img" id="preview-thumb">
+                        </div>
+                        <div class="preview-details">
+                            <div class="preview-title" id="preview-title">Título de Video</div>
+                            <div class="preview-meta-grid">
+                                <div class="preview-badge">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:4px;"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                    <span id="preview-author">Creador</span>
+                                </div>
+                                <div class="preview-badge">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    <span id="preview-duration">00:00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Conversion Controls -->
+                    <div class="converter-section">
+                        <div class="converter-title-row">
+                            <span class="converter-sparkle">⚡</span>
+                            <h4>Configurar Conversión</h4>
+                        </div>
+                        <p class="converter-sub">Elige el tipo, formato y calidad para tu conversión premium.</p>
+                        
+                        <div class="converter-controls-grid">
+                            <div class="control-group">
+                                <label for="conv-type">Tipo de Archivo</label>
+                                <select id="conv-type" onchange="updateConverterFormats()">
+                                    <option value="video">Video Digital</option>
+                                    <option value="audio">Audio / Música</option>
+                                </select>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label for="conv-format">Formato Final</label>
+                                <select id="conv-format" onchange="updateConverterQualities()">
+                                </select>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label for="conv-quality">Calidad / Calibración</label>
+                                <select id="conv-quality">
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <button class="btn-convert-submit" id="btn-convert-submit" onclick="convertAndDownload()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:middle;">
+                                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+                            </svg>
+                            Procesar, Convertir y Descargar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Floating annotation -->
+            <div class="handwritten-arrow-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 9l6-6m0 0l6 6m-6-6v12a9 9 0 11-18 0v-1.5" />
+                </svg>
+                <div class="handwritten-text">¡9 formatos premium! ✨</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="converter-features">
+        <h2>Conversión de Alta Fidelidad</h2>
+        <p class="section-sub">Motor de conversión profesional con codec optimizados para máxima calidad en cada formato de salida.</p>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><path d="m22 8-6 4 6 4V8Z"></path><rect width="14" height="12" x="2" y="6" rx="2" ry="2"></rect></svg>
+                </div>
+                <h3>4 Formatos de Video</h3>
+                <p>Convierte a MP4, WebM, MKV o AVI con resolución hasta 1080p Full HD. Cada codec optimizado para máxima compatibilidad y calidad visual.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                </div>
+                <h3>5 Formatos de Audio</h3>
+                <p>Extrae audio en MP3, WAV, FLAC, AAC u OGG Vorbis. Desde compresión ligera hasta calidad lossless sin pérdida para audiófilos.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="2" y1="14" x2="6" y2="14"></line><line x1="10" y1="8" x2="14" y2="8"></line><line x1="18" y1="16" x2="22" y2="16"></line></svg>
+                </div>
+                <h3>Control Total de Calidad</h3>
+                <p>Elige exactamente la resolución de video (360p–1080p) o bitrate de audio (128–320 kbps) que necesitas para cada proyecto.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-logo">
+                Flow<span>Get</span> ⚡
+            </div>
+            <div class="footer-links">
+                <a href="/">Inicio</a>
+                <a href="/#features">Características</a>
+                <a href="/#platforms">Plataformas</a>
+                <a href="/converter">Convertidor</a>
+                <a href="https://github.com/JeffCode2022/dowvideo.git" target="_blank">Repositorio</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div>
+                © 2026 FlowGet Inc. Todos los derechos reservados. Desarrollado con tecnología de punta y diseño 3D.
+            </div>
+            <div class="footer-socials">
+                <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                <a href="https://github.com/JeffCode2022/dowvideo.git" target="_blank" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
+                <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.517 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.871.508 9.388.508 9.388.508s7.517 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // GSAP Mouse spotlight
+        const cvWrapper = document.querySelector('.converter-outer-wrapper');
+        const cvSpotlight = document.getElementById('cv-spotlight');
+
+        if (cvWrapper && cvSpotlight) {
+            cvWrapper.addEventListener('mousemove', (e) => {
+                const rect = cvWrapper.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                gsap.to(cvSpotlight, {
+                    left: x,
+                    top: y,
+                    duration: 0.1,
+                    ease: "power2.out"
+                });
+            });
+        }
+
+        // DOM References
+        const converterUrlInput = document.getElementById('converter-url');
+        const btnFetch = document.getElementById('btn-fetch');
+        const statusContainer = document.getElementById('status-container');
+        const statusText = document.getElementById('status-text');
+        const statusSub = document.getElementById('status-sub');
+        const messageBox = document.getElementById('message-box');
+        const previewCard = document.getElementById('preview-card');
+
+        let currentProcessedUrl = '';
+
+        // Clipboard
+        async function pasteFromClipboard() {
+            try {
+                if (navigator.clipboard && navigator.clipboard.readText) {
+                    const text = await navigator.clipboard.readText();
+                    if (text) {
+                        converterUrlInput.value = text;
+                        showNotification("Enlace pegado correctamente.", "success");
+                        setTimeout(() => hideNotification(), 2000);
+                    } else {
+                        showNotification("El portapapeles está vacío.", "error");
+                    }
+                } else {
+                    showNotification("Clipboard API no soportada. Copia y pega manualmente.", "error");
+                }
+            } catch (err) {
+                showNotification("Permiso denegado para leer el portapapeles.", "error");
+            }
+        }
+
+        // Notifications
+        function showNotification(text, type) {
+            messageBox.innerText = text;
+            messageBox.className = `msg-box ${type}`;
+            messageBox.style.display = 'flex';
+        }
+
+        function hideNotification() {
+            messageBox.style.display = 'none';
+        }
+
+        // Fetch video info
+        function fetchVideoInfo() {
+            const url = converterUrlInput.value.trim();
+            if (!url) {
+                showNotification("Por favor, ingresa un enlace válido.", "error");
+                return;
+            }
+
+            previewCard.style.display = 'none';
+            hideNotification();
+
+            statusContainer.style.display = 'block';
+            statusText.innerText = "Analizando enlace...";
+            statusSub.innerText = "Extrayendo metadatos del video para conversión...";
+            btnFetch.disabled = true;
+
+            gsap.fromTo(statusContainer, { scale: 0.96, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" });
+
+            fetch('/get_info', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: url })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw new Error(err.message || 'Error en el servidor'); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                statusContainer.style.display = 'none';
+                btnFetch.disabled = false;
+
+                if (data.success) {
+                    currentProcessedUrl = data.original_url;
+
+                    document.getElementById('preview-thumb').src = data.thumbnail || '';
+                    document.getElementById('preview-title').innerText = data.title;
+                    document.getElementById('preview-author').innerText = data.uploader;
+                    document.getElementById('preview-duration').innerText = data.duration;
+
+                    previewCard.style.display = 'block';
+                    gsap.fromTo(previewCard, { scale: 0.95, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.2)" });
+                    
+                    showNotification("Video detectado. Configura el formato y descarga tu conversión.", "success");
+                } else {
+                    showNotification(data.message || "No se pudo obtener información del enlace.", "error");
+                }
+            })
+            .catch(error => {
+                statusContainer.style.display = 'none';
+                btnFetch.disabled = false;
+                showNotification(error.message || "Error al conectar con los servidores.", "error");
+            });
+        }
+
+        // --- Converter Logic ---
+        const convType = document.getElementById('conv-type');
+        const convFormat = document.getElementById('conv-format');
+        const convQuality = document.getElementById('conv-quality');
+
+        const formatOptions = {
+            video: [
+                { value: 'mp4', label: 'MP4 (Video Estándar)' },
+                { value: 'webm', label: 'WebM (Formato Google)' },
+                { value: 'mkv', label: 'MKV (Matroska Container)' },
+                { value: 'avi', label: 'AVI (Video Legacy)' }
+            ],
+            audio: [
+                { value: 'mp3', label: 'MP3 (Audio Universal)' },
+                { value: 'wav', label: 'WAV (Audio PCM Sin Pérdida)' },
+                { value: 'flac', label: 'FLAC (Códec Sin Pérdida)' },
+                { value: 'aac', label: 'AAC (Fidelidad Apple)' },
+                { value: 'ogg', label: 'OGG Vorbis (Código Abierto)' }
+            ]
+        };
+
+        const qualityOptions = {
+            video: [
+                { value: '1080', label: '1080p (Full HD)' },
+                { value: '720', label: '720p (Alta Definición)' },
+                { value: '480', label: '480p (Definición Media)' },
+                { value: '360', label: '360p (Definición Baja)' }
+            ],
+            audio: [
+                { value: '320', label: '320 kbps (Calidad de Estudio)' },
+                { value: '256', label: '256 kbps (Alta Calidad)' },
+                { value: '192', label: '192 kbps (Calidad Estándar)' },
+                { value: '128', label: '128 kbps (Ahorro de Datos)' }
+            ]
+        };
+
+        function updateConverterFormats() {
+            const type = convType.value;
+            const formats = formatOptions[type];
+            
+            convFormat.innerHTML = '';
+            formats.forEach(fmt => {
+                const opt = document.createElement('option');
+                opt.value = fmt.value;
+                opt.textContent = fmt.label;
+                convFormat.appendChild(opt);
+            });
+            
+            updateConverterQualities();
+        }
+
+        function updateConverterQualities() {
+            const type = convType.value;
+            const qualities = qualityOptions[type];
+            
+            convQuality.innerHTML = '';
+            qualities.forEach(q => {
+                const opt = document.createElement('option');
+                opt.value = q.value;
+                opt.textContent = q.label;
+                convQuality.appendChild(opt);
+            });
+        }
+
+        function convertAndDownload() {
+            if (!currentProcessedUrl) {
+                showNotification("Primero analiza un video pegando su enlace arriba.", "error");
+                return;
+            }
+
+            const type = convType.value;
+            const format = convFormat.value;
+            const quality = convQuality.value;
+            
+            const optionId = `convert_${type}_${format}_${quality}`;
+            const displayLabel = `${format.toUpperCase()} (${type === 'video' ? quality + 'p' : quality + 'kbps'})`;
+
+            previewCard.style.display = 'none';
+            hideNotification();
+
+            statusContainer.style.display = 'block';
+            statusText.innerText = "Convirtiendo...";
+            statusSub.innerText = `Procesando conversión premium a ${displayLabel}...`;
+            
+            gsap.fromTo(statusContainer, { scale: 0.96, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" });
+
+            fetch('/download', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    url: currentProcessedUrl,
+                    option_id: optionId
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw new Error(err.message || 'Error al procesar la conversión'); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                statusContainer.style.display = 'none';
+                previewCard.style.display = 'block';
+
+                if (data.success && data.filename) {
+                    showNotification("¡Conversión exitosa! Transfiriendo archivo...", "success");
+                    window.location.href = `/serve_file/${encodeURIComponent(data.filename)}`;
+                } else {
+                    showNotification(data.message || "Error al convertir el archivo multimedia.", "error");
+                }
+            })
+            .catch(error => {
+                statusContainer.style.display = 'none';
+                previewCard.style.display = 'block';
+                showNotification(error.message || "Error al completar la conversión.", "error");
+            });
+        }
+
+        // Initialize converter on load
+        updateConverterFormats();
+    </script>
+</body>
+</html>

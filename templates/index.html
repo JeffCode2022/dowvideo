@@ -3,117 +3,1674 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Descargador Universal de Videos</title>
+    <title>⚡ FlowGet - Descarga y Convierte Video y Audio al Instante</title>
+    <meta name="description" content="FlowGet es el descargador de video y audio más rápido y premium del mercado. Descarga y convierte videos de YouTube, TikTok, Instagram y más en Full HD y MP3 320kbps de forma limpia, directa y sin publicidad.">
+    
+    <!-- Google Fonts: Geist for premium bold typography & Caveat for handwritten details -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Geist:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Premium styling with native SVGs, no external script lag -->
+    
+    <!-- GSAP for interactive animations and spotlight tracking -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f0f2f5;
+        /* Light Mode Premium Styling System */
+        :root {
+            --bg-primary: #f6f5f4;
+            --accent-orange: #ff6321;
+            --accent-indigo: #5d5fef;
+            --text-primary: #0a0a0c;
+            --text-secondary: #27272a;
+            --text-muted: #71717a;
+            --glass-bg: rgba(255, 255, 255, 0.65);
+            --glass-border: rgba(9, 9, 11, 0.06);
+            --glass-shadow: rgba(0, 0, 0, 0.04);
+            --inset-highlight: rgba(255, 255, 255, 0.85);
         }
-        .container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            color: #1a73e8;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 6px;
+
+        * {
             box-sizing: border-box;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
+            margin: 0;
+            padding: 0;
         }
-        input[type="text"]:focus {
-            border-color: #1a73e8;
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Geist', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+            
+            /* Premium design grid dot canvas matching Agnos */
+            background-image: radial-gradient(rgba(9, 9, 11, 0.05) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        /* 3D Pastel Background Orbs */
+        .bg-orbs-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.16;
+            mix-blend-mode: multiply;
+            animation: orbFloat 24s infinite alternate ease-in-out;
+        }
+
+        .orb-orange {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--accent-orange) 0%, transparent 80%);
+            top: -200px;
+            left: -150px;
+        }
+
+        .orb-indigo {
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, var(--accent-indigo) 0%, transparent 80%);
+            bottom: 5%;
+            right: -250px;
+            animation-duration: 30s;
+            animation-delay: -6s;
+        }
+
+        @keyframes orbFloat {
+            0% {
+                transform: translate(0, 0) scale(1) rotate(0deg);
+            }
+            100% {
+                transform: translate(100px, 80px) scale(1.1) rotate(30deg);
+            }
+        }
+
+        /* Floating Navbar (Agnos Light Style) */
+        header {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1200px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px) saturate(190%);
+            -webkit-backdrop-filter: blur(25px) saturate(190%);
+            border: 1px solid var(--glass-border);
+            border-radius: 100px;
+            padding: 14px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.03),
+                        inset 0 1px 0 var(--inset-highlight);
+        }
+
+        .logo-container {
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            color: var(--text-primary);
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .logo-container span {
+            color: var(--accent-orange);
+        }
+
+        nav {
+            display: flex;
+            gap: 32px;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: color 0.25s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--accent-orange);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent-orange);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        nav a:hover::after {
+            width: 16px;
+        }
+
+        .nav-btn {
+            background: #09090b;
+            border: 1px solid #09090b;
+            color: #ffffff;
+            padding: 9px 20px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .nav-btn:hover {
+            background: var(--accent-orange);
+            border-color: var(--accent-orange);
+            box-shadow: 0 6px 18px rgba(255, 99, 33, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 170px 24px 80px;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 99, 33, 0.06);
+            border: 1px solid rgba(255, 99, 33, 0.15);
+            color: var(--accent-orange);
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            font-size: 3.8rem;
+            font-weight: 900;
+            color: var(--text-primary);
+            line-height: 1.1;
+            letter-spacing: -0.04em;
+            margin-bottom: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero h1 span {
+            color: var(--accent-orange);
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero p.subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 75px;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        /* Floating Downloader Container and Caveat Arrow */
+        .downloader-outer-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        /* Handwritten annotation matching Agnos style */
+        .handwritten-arrow-wrapper {
+            position: absolute;
+            right: 25px;
+            top: -65px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            pointer-events: none;
+            user-select: none;
+            z-index: 20; /* Float ABOVE the glass card, preventing it from clipping underneath */
+        }
+
+        .handwritten-arrow-wrapper svg {
+            width: 45px;
+            height: 45px;
+            transform: scaleX(-1) rotate(60deg);
+            opacity: 0.85;
+            color: var(--accent-orange);
+        }
+
+        .handwritten-text {
+            font-family: 'Caveat', cursive;
+            font-size: 1.8rem;
+            color: var(--accent-orange);
+            transform: rotate(-4deg);
+            white-space: nowrap;
+            text-shadow: 0 0 15px rgba(255, 99, 33, 0.1);
+        }
+
+        /* Milky Glassmorphic Downloader Card (Agnos Light Theme) */
+        .downloader-card-glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(35px) saturate(190%);
+            -webkit-backdrop-filter: blur(35px) saturate(190%);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: 35px;
+            box-shadow: 0 30px 60px var(--glass-shadow),
+                        inset 0 1px 0 var(--inset-highlight);
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+            text-align: left;
+        }
+
+        /* Cursor Spotlight tracker aura for Light Mode */
+        .downloader-spotlight {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 99, 33, 0.12) 0%, rgba(93, 95, 239, 0.04) 50%, transparent 100%);
+            top: -200px;
+            left: -200px;
+            pointer-events: none;
+            z-index: 1;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .downloader-outer-wrapper:hover .downloader-spotlight {
+            opacity: 1;
+        }
+
+        /* Platform Grid Links */
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-bottom: 28px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .platform-item {
+            background: rgba(255, 255, 255, 0.75);
+            border: 1px solid rgba(9, 9, 11, 0.05);
+            border-radius: 16px;
+            padding: 16px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.01);
+        }
+
+        .platform-item svg {
+            width: 24px;
+            height: 24px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .platform-item span {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #4b5563;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .platform-item[data-platform="youtube"] svg {
+            color: #ff0000;
+        }
+        .platform-item[data-platform="youtube"]:hover {
+            background: rgba(255, 0, 0, 0.04) !important;
+            border-color: rgba(255, 0, 0, 0.15) !important;
+            box-shadow: 0 10px 25px rgba(255, 0, 0, 0.1) !important;
+            transform: translateY(-5px);
+        }
+        .platform-item[data-platform="youtube"]:hover span {
+            color: #ff0000;
+        }
+        .platform-item[data-platform="youtube"]:hover svg {
+            transform: scale(1.15) rotate(-3deg);
+        }
+
+        .platform-item[data-platform="tiktok"] svg {
+            color: #09090b;
+        }
+        .platform-item[data-platform="tiktok"]:hover {
+            background: rgba(9, 9, 11, 0.04) !important;
+            border-color: rgba(9, 9, 11, 0.15) !important;
+            box-shadow: 0 10px 25px rgba(9, 9, 11, 0.08) !important;
+            transform: translateY(-5px);
+        }
+        .platform-item[data-platform="tiktok"]:hover span {
+            color: #09090b;
+        }
+        .platform-item[data-platform="tiktok"]:hover svg {
+            transform: scale(1.15) rotate(3deg);
+        }
+
+        .platform-item[data-platform="instagram"]:hover {
+            background: rgba(225, 48, 108, 0.04) !important;
+            border-color: rgba(225, 48, 108, 0.15) !important;
+            box-shadow: 0 10px 25px rgba(225, 48, 108, 0.1) !important;
+            transform: translateY(-5px);
+        }
+        .platform-item[data-platform="instagram"]:hover span {
+            color: #d6249f;
+        }
+        .platform-item[data-platform="instagram"]:hover svg {
+            transform: scale(1.15) rotate(-3deg);
+        }
+
+        .platform-item[data-platform="twitter"] svg {
+            color: #09090b;
+        }
+        .platform-item[data-platform="twitter"]:hover {
+            background: rgba(9, 9, 11, 0.04) !important;
+            border-color: rgba(9, 9, 11, 0.15) !important;
+            box-shadow: 0 10px 25px rgba(9, 9, 11, 0.08) !important;
+            transform: translateY(-5px);
+        }
+        .platform-item[data-platform="twitter"]:hover span {
+            color: #09090b;
+        }
+        .platform-item[data-platform="twitter"]:hover svg {
+            transform: scale(1.15) rotate(3deg);
+        }
+
+        .platform-item[data-platform="facebook"] svg {
+            color: #1877f2;
+        }
+        .platform-item[data-platform="facebook"]:hover {
+            background: rgba(24, 119, 242, 0.04) !important;
+            border-color: rgba(24, 119, 242, 0.15) !important;
+            box-shadow: 0 10px 25px rgba(24, 119, 242, 0.1) !important;
+            transform: translateY(-5px);
+        }
+        .platform-item[data-platform="facebook"]:hover span {
+            color: #1877f2;
+        }
+        .platform-item[data-platform="facebook"]:hover svg {
+            transform: scale(1.15) rotate(-3deg);
+        }
+
+        /* Search input bar wrapper */
+        .input-bar-container {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(9, 9, 11, 0.08);
+            border-radius: 16px;
+            padding: 8px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 5;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.01);
+        }
+
+        .input-bar-container:focus-within {
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 18px rgba(255, 99, 33, 0.08), inset 0 1px 2px rgba(0, 0, 0, 0.01);
+            background: #ffffff;
+        }
+
+        .input-bar-icon {
+            padding: 0 14px;
+            color: #71717a;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-bar-container input[type="text"] {
+            flex-grow: 1;
+            width: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 10px 0;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: 'Geist', sans-serif;
+            font-weight: 500;
+        }
+
+        .input-bar-container input[type="text"]::placeholder {
+            color: #a1a1aa;
+        }
+
+        .btn-paste {
+            background: #ffffff;
+            border: 1px solid rgba(9, 9, 11, 0.08);
+            color: var(--text-secondary);
+            padding: 10px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .btn-paste:hover {
+            background: rgba(255, 99, 33, 0.05);
+            border-color: var(--accent-orange);
+            color: var(--accent-orange);
+        }
+
+        /* Action Buttons */
+        .btn-submit {
+            width: 100%;
+            background: var(--accent-orange);
+            color: #ffffff;
+            border: none;
+            padding: 16px;
+            font-size: 1rem;
+            font-weight: 750;
+            border-radius: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 8px 22px rgba(255, 99, 33, 0.25);
+            position: relative;
+            z-index: 5;
+            transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(255, 99, 33, 0.38);
+            filter: brightness(1.05);
+        }
+
+        .btn-submit:active {
+            transform: scale(0.98);
+        }
+
+        /* Notification messages */
+        .msg-box {
+            display: none;
+            margin-top: 16px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            z-index: 5;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .msg-box.error {
+            background: rgba(239, 68, 68, 0.06);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            color: #ea3838;
+        }
+
+        .msg-box.success {
+            background: rgba(16, 185, 129, 0.06);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+            color: #0d9464;
+        }
+
+        /* Loading / Processing Container */
+        .status-box {
+            display: none;
+            margin-top: 20px;
+            padding: 24px;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(9, 9, 11, 0.05);
+            border-radius: 18px;
+            text-align: center;
+            position: relative;
+            z-index: 5;
+        }
+
+        .spinner-cyber {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(9, 9, 11, 0.03);
+            border-radius: 50%;
+            border-top-color: var(--accent-orange);
+            border-right-color: var(--accent-indigo);
+            animation: spin 0.85s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        .status-txt-main {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .status-txt-sub {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(9, 9, 11, 0.03);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 16px;
+        }
+
+        .progress-bar-liquid {
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--accent-orange), var(--accent-indigo), transparent);
+            animation: pulse-move 1.5s infinite linear;
+        }
+
+        /* Extracted info / Result display */
+        .result-box {
+            display: none;
+            margin-top: 28px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(9, 9, 11, 0.06);
+            border-radius: 20px;
+            padding: 20px;
+            position: relative;
+            z-index: 5;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.015);
+            animation: slideDown 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .result-header {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .result-thumbnail-container {
+            flex-shrink: 0;
+            width: 120px;
+            height: 70px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(9, 9, 11, 0.06);
+        }
+
+        .result-thumbnail-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .result-details {
+            flex-grow: 1;
+        }
+
+        .result-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            line-height: 1.4;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .result-meta-grid {
+            display: flex;
+            gap: 8px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .result-badge {
+            background: rgba(9, 9, 11, 0.02);
+            border: 1px solid rgba(9, 9, 11, 0.04);
+            border-radius: 8px;
+            padding: 3px 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+        }
+
+        .result-badge i {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* Format switching tabs */
+        .format-tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(9, 9, 11, 0.05);
+            margin-bottom: 18px;
+        }
+
+        .format-tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 12px;
+            font-family: 'Geist', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #a1a1aa;
+            cursor: pointer;
+            position: relative;
+            transition: color 0.25s ease;
             outline: none;
         }
-        button {
-            background-color: #1a73e8;
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            width: 100%;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
+
+        .format-tab-btn.active {
+            color: var(--accent-orange);
         }
-        button:hover {
-            background-color: #1557b0;
+
+        .format-tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent-orange);
+            border-radius: 10px;
         }
-        .message {
-            text-align: center;
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        .info-text {
-            text-align: center;
-            color: #666;
-            margin-top: 20px;
-            font-size: 14px;
-        }
-        .loading {
+
+        /* Format selector lists */
+        .format-list {
             display: none;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 240px;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .format-list.active {
+            display: flex;
+        }
+
+        /* Scrollbar styles for the format list */
+        .format-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .format-list::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.01);
+        }
+        .format-list::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+        }
+        .format-list::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-orange);
+        }
+
+        .format-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #ffffff;
+            border: 1px solid rgba(9, 9, 11, 0.04);
+            border-radius: 14px;
+            padding: 12px 18px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.01);
+        }
+
+        .format-row:hover {
+            background: rgba(255, 99, 33, 0.01);
+            border-color: rgba(255, 99, 33, 0.1);
+            transform: translateX(2px);
+        }
+
+        .format-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-align: left;
+        }
+
+        .format-icon {
+            color: var(--accent-orange);
+            display: flex;
+            align-items: center;
+        }
+
+        .format-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .format-title {
+            font-size: 0.85rem;
+            font-weight: 750;
+            color: var(--text-primary);
+        }
+
+        .format-weight {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+        }
+
+        .btn-download-action {
+            background: #ffffff;
+            border: 1px solid rgba(9, 9, 11, 0.06);
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            font-family: 'Geist', sans-serif;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .btn-download-action:hover {
+            background: var(--accent-orange);
+            border-color: var(--accent-orange);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(255, 99, 33, 0.25);
+        }
+
+        .btn-download-action:active {
+            transform: scale(0.96);
+        }
+
+        /* 3. Features Section (Style from Agnos Grid) */
+        .features-section {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 80px auto 0;
+            padding: 0 24px;
             text-align: center;
-            margin-top: 20px;
         }
-        .loading:after {
-            content: '.'; 
-            animation: dots 1s steps(5, end) infinite;
+
+        .features-section h2 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            margin-bottom: 12px;
+            color: var(--text-primary);
         }
-        @keyframes dots {
-            0%, 20% { content: '.'; }
-            40% { content: '..'; }
-            60% { content: '...'; }
-            80% { content: '....'; }
-            100% { content: '.....'; }
+
+        .features-section p.section-sub {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 48px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 500;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            text-align: left;
+        }
+
+        .feature-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px) saturate(190%);
+            -webkit-backdrop-filter: blur(24px) saturate(190%);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.02),
+                        inset 0 1px 0 var(--inset-highlight);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255, 99, 33, 0.25), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(255, 99, 33, 0.15);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.05), inset 0 1px 0 var(--inset-highlight);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon-wrapper {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 99, 33, 0.05);
+            border: 1px solid rgba(255, 99, 33, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-orange);
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon-wrapper {
+            background: var(--accent-orange);
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(255, 99, 33, 0.3);
+            transform: scale(1.05);
+        }
+
+        .feature-card h3 {
+            font-size: 1.15rem;
+            font-weight: 850;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        /* --- Floating premium assets (3D-like glassmorphic style) --- */
+        .floating-asset {
+            position: absolute;
+            width: 56px;
+            height: 56px;
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(12px) saturate(180%);
+            -webkit-backdrop-filter: blur(12px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05),
+                        inset 0 2px 5px rgba(255, 255, 255, 0.6);
+            z-index: 5;
+            transition: all 0.4s ease;
+            pointer-events: auto;
+            cursor: pointer;
+        }
+
+        .floating-asset svg {
+            width: 26px;
+            height: 26px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+            transition: transform 0.3s ease;
+        }
+
+        .floating-asset:hover {
+            transform: scale(1.15) translateY(-5px) rotate(8deg) !important;
+            background: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 15px 35px rgba(255, 99, 33, 0.15),
+                        inset 0 2px 5px rgba(255, 255, 255, 0.8);
+        }
+
+        /* Specific glows for floating badges */
+        .asset-video {
+            box-shadow: 0 10px 30px rgba(255, 99, 33, 0.08), inset 0 2px 5px rgba(255, 255, 255, 0.6);
+        }
+        .asset-audio {
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.08), inset 0 2px 5px rgba(255, 255, 255, 0.6);
+        }
+        .asset-youtube {
+            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.08), inset 0 2px 5px rgba(255, 255, 255, 0.6);
+        }
+        .asset-instagram {
+            box-shadow: 0 10px 30px rgba(225, 48, 108, 0.08), inset 0 2px 5px rgba(255, 255, 255, 0.6);
+        }
+        .asset-tiktok {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), inset 0 2px 5px rgba(255, 255, 255, 0.6);
+        }
+        .asset-format {
+            box-shadow: 0 10px 30px rgba(251, 191, 36, 0.08), inset 0 2px 5px rgba(255, 255, 255, 0.6);
+        }
+
+        /* Float animations */
+        @keyframes float-y-1 {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(4deg); }
+        }
+        @keyframes float-y-2 {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(-6deg); }
+        }
+        @keyframes float-y-3 {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(8deg); }
+        }
+
+        /* Positions and Animations around hero */
+        .pos-left-top {
+            left: -80px;
+            top: 20px;
+            animation: float-y-1 6s ease-in-out infinite;
+        }
+        .pos-right-top {
+            right: -80px;
+            top: 50px;
+            animation: float-y-2 7s ease-in-out infinite;
+            animation-delay: 1s;
+        }
+        .pos-left-mid {
+            left: -110px;
+            top: 180px;
+            animation: float-y-3 5.5s ease-in-out infinite;
+            animation-delay: 0.5s;
+        }
+        .pos-right-mid {
+            right: -110px;
+            top: 220px;
+            animation: float-y-1 6.5s ease-in-out infinite;
+            animation-delay: 1.5s;
+        }
+        .pos-left-low {
+            left: -70px;
+            top: 340px;
+            animation: float-y-2 8s ease-in-out infinite;
+            animation-delay: 2s;
+        }
+        .pos-right-low {
+            right: -70px;
+            top: 360px;
+            animation: float-y-3 7.5s ease-in-out infinite;
+            animation-delay: 0.8s;
+        }
+
+        /* Responsive hiding of floating assets on smaller viewports */
+        @media(max-width: 1024px) {
+            .floating-asset {
+                display: none !important;
+            }
+        }
+
+
+
+        /* 4. Footer Section (Agnos Style Alignment) */
+        footer {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 120px auto 40px;
+            padding: 40px 24px 0;
+            border-top: 1px solid rgba(9, 9, 11, 0.04);
+        }
+
+        .footer-grid {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        .footer-logo {
+            font-family: 'Geist', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--text-primary);
+            letter-spacing: -0.04em;
+        }
+
+        .footer-logo span {
+            color: var(--accent-orange);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 28px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: color 0.2s ease;
+            font-weight: 600;
+        }
+
+        .footer-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: #a1a1aa;
+            padding-top: 20px;
+            border-top: 1px solid rgba(9, 9, 11, 0.02);
+            font-weight: 500;
+        }
+
+        .footer-socials {
+            display: flex;
+            gap: 16px;
+        }
+
+        .footer-socials a {
+            color: #a1a1aa;
+            transition: color 0.2s ease;
+        }
+
+        .footer-socials a:hover {
+            color: var(--accent-orange);
+        }
+
+        /* Animations & Responsive */
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes pulse-move {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(200%); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media(max-width: 992px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media(max-width: 768px) {
+            .handwritten-arrow-wrapper {
+                display: none; /* Hide floating text on narrow mobile viewports to avoid overlapping/clipping */
+            }
+        }
+
+        @media(max-width: 768px) {
+            header {
+                padding: 10px 20px;
+            }
+            nav {
+                display: none; /* Mobile menu fallback simplified for design focus */
+            }
+            .hero {
+                padding: 140px 16px 60px;
+            }
+            .hero h1 {
+                font-size: 2.3rem;
+            }
+            .platform-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .platform-item:nth-child(4), .platform-item:nth-child(5) {
+                grid-column: span 1;
+            }
+            .downloader-card-glass {
+                padding: 24px 18px;
+            }
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer-grid {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .footer-links {
+                flex-wrap: wrap;
+                gap: 16px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Descargador de Videos</h1>
-        <form method="POST">
-            <div class="form-group">
-                <input type="text" name="link" placeholder="Ingresa el enlace del video" required>
-            </div>
-            <button type="submit">Descargar Video</button>
-        </form>
 
-        {% if message %}
-            <div class="message {{ status }}">
-                {{ message }}
-            </div>
-        {% endif %}
-        
-        {% if file_path %}
-        <div class="message success">
-            Video descargado exitosamente. <a href="{{ url_for('download', filename=file_path.split('/')[-1]) }}" target="_blank">Haz clic aquí para descargar el video.</a>
+    <!-- Dynamic 3D Blur Orbs -->
+    <div class="bg-orbs-container">
+        <div class="bg-orb orb-orange"></div>
+        <div class="bg-orb orb-indigo"></div>
+    </div>
+
+    <!-- Floating Navbar -->
+    <header>
+        <div class="logo-container">
+            Flow<span>Get</span> ⚡
         </div>
-    {% endif %}
+        <nav>
+            <a href="#inicio">Inicio</a>
+            <a href="#features">Características</a>
+            <a href="#platforms">Plataformas</a>
+            <a href="/converter">Convertidor</a>
+            <a href="#soporte">Soporte</a>
+        </nav>
+        <button class="nav-btn" onclick="videoUrlInput.focus()">Empezar</button>
+    </header>
+
+    <!-- Main Container / Hero -->
+    <section class="hero" id="inicio">
+        <div class="hero-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;color:#ff6321;margin-right:4px;display:inline-block;vertical-align:middle;"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275Z"/></svg> Descargador Premium SaaS v3.0
+        </div>
+        <h1>Descarga videos y audios al <span>instante</span></h1>
+        <p class="subtitle">FlowGet combina velocidad de descarga extrema y un diseño glassmorphism de cristal líquido para que guardes tus contenidos favoritos en Full HD y MP3 directamente en tu almacenamiento.</p>
+
+        <!-- Downloader Component Wrapper -->
+        <div class="downloader-outer-wrapper">
+            
+            <!-- Mouse spotlight reactivo -->
+            <div class="downloader-spotlight" id="dl-spotlight"></div>
+
+            <!-- Floating premium assets (3D-like glassmorphic style) -->
+            <div class="floating-asset asset-video pos-left-top" title="Formatos de Video" onclick="videoUrlInput.focus()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-orange)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2" ry="2"/></svg>
+            </div>
+            <div class="floating-asset asset-audio pos-right-top" title="Alta Calidad de Audio" onclick="videoUrlInput.focus()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+            </div>
+            <div class="floating-asset asset-youtube pos-left-mid" title="YouTube Premium" onclick="suggestPlatform('YouTube')">
+                <svg viewBox="0 0 24 24" fill="currentColor" style="color:#ff0000; width: 24px; height: 24px;"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.517 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.871.508 9.388.508 9.388.508s7.517 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            </div>
+            <div class="floating-asset asset-instagram pos-right-mid" title="Instagram Premium" onclick="suggestPlatform('Instagram')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="url(#float-insta-grad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;">
+                    <defs>
+                        <linearGradient id="float-insta-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#fdf497" />
+                            <stop offset="5%" stop-color="#fdf497" />
+                            <stop offset="45%" stop-color="#fd5949" />
+                            <stop offset="60%" stop-color="#d6249f" />
+                            <stop offset="90%" stop-color="#285AEB" />
+                        </linearGradient>
+                    </defs>
+                    <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+                </svg>
+            </div>
+            <div class="floating-asset asset-format pos-left-low" title="Múltiples Formatos" onclick="videoUrlInput.focus()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M8 13h8"/><path d="M8 17h8"/></svg>
+            </div>
+            <div class="floating-asset asset-tiktok pos-right-low" title="TikTok Premium" onclick="suggestPlatform('TikTok')">
+                <svg viewBox="0 0 24 24" fill="currentColor" style="color:#000000; width: 22px; height: 22px;"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.02 1.63 4.19 1.11 1.25 2.67 2.05 4.3 2.22v3.85c-1.89-.09-3.73-.78-5.21-1.99-.21-.18-.41-.36-.6-.56v7.7c.05 1.93-.65 3.86-1.97 5.25-1.52 1.67-3.8 2.54-6.04 2.33-2.34-.14-4.57-1.48-5.74-3.55-1.4-2.39-1.37-5.59.08-7.95 1.34-2.22 3.81-3.6 6.4-3.51v3.91c-1.33-.11-2.73.44-3.51 1.52-.94 1.2-.95 2.99-.03 4.2 1 1.36 2.87 1.9 4.46 1.29 1.05-.39 1.77-1.39 1.8-2.52v-14v-.03c-.02-.04-.04-.08-.08-.1z"/></svg>
+            </div>
+            
+            <!-- Downloader Main Card -->
+            <div class="downloader-card-glass">
+                
+                <!-- Quick Brand Links Grid -->
+                <div class="platform-grid" id="platforms">
+                    <div class="platform-item" data-platform="youtube" onclick="suggestPlatform('YouTube')">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.517 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.871.508 9.388.508 9.388.508s7.517 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                        <span>YouTube</span>
+                    </div>
+                    <div class="platform-item" data-platform="tiktok" onclick="suggestPlatform('TikTok')">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.02 1.63 4.19 1.11 1.25 2.67 2.05 4.3 2.22v3.85c-1.89-.09-3.73-.78-5.21-1.99-.21-.18-.41-.36-.6-.56v7.7c.05 1.93-.65 3.86-1.97 5.25-1.52 1.67-3.8 2.54-6.04 2.33-2.34-.14-4.57-1.48-5.74-3.55-1.4-2.39-1.37-5.59.08-7.95 1.34-2.22 3.81-3.6 6.4-3.51v3.91c-1.33-.11-2.73.44-3.51 1.52-.94 1.2-.95 2.99-.03 4.2 1 1.36 2.87 1.9 4.46 1.29 1.05-.39 1.77-1.39 1.8-2.52v-14v-.03c-.02-.04-.04-.08-.08-.1z"/></svg>
+                        <span>TikTok</span>
+                    </div>
+                    <div class="platform-item" data-platform="instagram" onclick="suggestPlatform('Instagram')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="url(#insta-gradient-grid)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <defs>
+                                <linearGradient id="insta-gradient-grid" x1="0%" y1="100%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#fdf497" />
+                                    <stop offset="20%" stop-color="#fd5949" />
+                                    <stop offset="60%" stop-color="#d6249f" />
+                                    <stop offset="100%" stop-color="#285AEB" />
+                                </linearGradient>
+                            </defs>
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                        </svg>
+                        <span>Instagram</span>
+                    </div>
+                    <div class="platform-item" data-platform="twitter" onclick="suggestPlatform('Twitter')">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        <span>Twitter / X</span>
+                    </div>
+                    <div class="platform-item" data-platform="facebook" onclick="suggestPlatform('Facebook')">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        <span>Facebook</span>
+                    </div>
+                </div>
+
+                <!-- Input Field container -->
+                <div class="input-bar-container">
+                    <div class="input-bar-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                    </div>
+                    <input type="text" id="video-url" placeholder="Pega la dirección de tu video..." required autocomplete="off">
+                    <button class="btn-paste" onclick="pasteFromClipboard()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;margin-right:4px;display:inline-block;vertical-align:middle;"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path></svg> Pegar
+                    </button>
+                </div>
+
+                <!-- Submission Button -->
+                <button class="btn-submit" id="btn-submit" onclick="fetchVideoInfo()">
+                    <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:4px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> Buscar y Preparar
+                </button>
+
+                <!-- Notifications Messages Box -->
+                <div class="msg-box" id="message-box"></div>
+
+                <!-- Loader Indicator -->
+                <div class="status-box" id="status-container">
+                    <div class="spinner-cyber"></div>
+                    <div class="status-txt-main" id="status-text">Procesando enlace...</div>
+                    <div class="status-txt-sub" id="status-sub">Analizando formatos y tamaños disponibles</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-liquid"></div>
+                    </div>
+                </div>
+
+                <!-- Result Preview Card -->
+                <div class="result-box" id="result-card">
+                    <div class="result-header">
+                        <div class="result-thumbnail-container">
+                            <img src="" alt="Miniatura" class="result-thumbnail-img" id="result-thumb">
+                        </div>
+                        <div class="result-details">
+                            <div class="result-title" id="result-title">Título de Video</div>
+                            <div class="result-meta-grid">
+                                <div class="result-badge">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:4px;"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                    <span id="result-author">Creador</span>
+                                </div>
+                                <div class="result-badge">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    <span id="result-duration">00:00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Category switcher tabs -->
+                    <div class="format-tabs">
+                        <button class="format-tab-btn active" id="tab-video" onclick="switchTab('video')">Video (MP4)</button>
+                        <button class="format-tab-btn" id="tab-audio" onclick="switchTab('audio')">Audio (MP3/M4A)</button>
+                    </div>
+
+                    <!-- Output list render nodes -->
+                    <div class="format-list active" id="video-formats-list"></div>
+                    <div class="format-list" id="audio-formats-list"></div>
+
+
+                </div>
+
+            </div>
+
+            <!-- Floating Agnos-style Caveat Annotation -->
+            <div class="handwritten-arrow-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 9l6-6m0 0l6 6m-6-6v12a9 9 0 11-18 0v-1.5" />
+                </svg>
+                <div class="handwritten-text">¡100% Rápido y HD! ✨</div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Features Section styled exactly like Agnos Cards Grid -->
+    <section class="features-section" id="features">
+        <h2>Servicio de Descarga Ultra-Premium</h2>
+        <p class="section-sub">FlowGet es la herramienta definitiva para obtener tu contenido multimedia predilecto con altos bitrates y sin fricciones visuales.</p>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 0-2.72 7.82-6.05 9.05A22 22 0 0 1 12 15z"></path><path d="M9 15c.02.88-.13 1.76-.45 2.59l-1.16-1.16"></path><path d="M15 9c-.02-.88.13-1.76.45-2.59l1.16 1.16"></path></svg>
+                </div>
+                <h3>Velocidad Extrema</h3>
+                <p>Nuestros servidores dedicados extraen, combinan y procesan flujos DASH a máxima velocidad de ancho de banda, transfiriéndolos directamente a tu almacenamiento.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="2" y1="14" x2="6" y2="14"></line><line x1="10" y1="8" x2="14" y2="8"></line><line x1="18" y1="16" x2="22" y2="16"></line></svg>
+                </div>
+                <h3>Múltiples Formatos</h3>
+                <p>Elige exactamente la calidad y resolución que necesitas. Descarga videos en Full HD / 4K o convierte audios a MP3 premium (320kbps) con un solo toque.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
+                </div>
+                <h3>100% Limpio y Seguro</h3>
+                <p>Olvídate de la publicidad molesta, ventanas emergentes y malware. Una experiencia SaaS fluida, estética de cristal líquido líquido y descarga directa limpia.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Premium Clean Footer -->
+    <footer id="soporte">
+        <div class="footer-grid">
+            <div class="footer-logo">
+                Flow<span>Get</span> ⚡
+            </div>
+            <div class="footer-links">
+                <a href="#inicio">Inicio</a>
+                <a href="#features">Características</a>
+                <a href="#platforms">Plataformas</a>
+                <a href="https://github.com/JeffCode2022/dowvideo.git" target="_blank">Repositorio</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div>
+                © 2026 FlowGet Inc. Todos los derechos reservados. Desarrollado con tecnología de punta y diseño 3D.
+            </div>
+            <div class="footer-socials">
+                <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                <a href="https://github.com/JeffCode2022/dowvideo.git" target="_blank" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
+                <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.517 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.871.508 9.388.508 9.388.508s7.517 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Client-side Logic Script (AJAX + Clipboard + GSAP) -->
+    <script>
+        // Inline SVG helper for dynamic format lists
+        function getSvgIcon(name) {
+            switch(name) {
+                case 'video':
+                    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:middle;color:var(--accent-orange);"><path d="m22 8-6 4 6 4V8Z"></path><rect width="14" height="12" x="2" y="6" rx="2" ry="2"></rect></svg>`;
+                case 'music':
+                    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:middle;color:var(--accent-orange);"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>`;
+                case 'hard-drive':
+                    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:2px;opacity:0.75;"><rect width="20" height="8" x="2" y="3" rx="2"></rect><rect width="20" height="8" x="2" y="13" rx="2"></rect><line x1="6" y1="7" x2="6.01" y2="7"></line><line x1="6" y1="17" x2="6.01" y2="17"></line></svg>`;
+                case 'download':
+                    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>`;
+                default:
+                    return '';
+            }
+        }
+
+        // 3D Mouse spotlight follower behind card using GSAP
+        const dlWrapper = document.querySelector('.downloader-outer-wrapper');
+        const dlSpotlight = document.getElementById('dl-spotlight');
+
+        if (dlWrapper && dlSpotlight) {
+            dlWrapper.addEventListener('mousemove', (e) => {
+                const rect = dlWrapper.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                gsap.to(dlSpotlight, {
+                    left: x,
+                    top: y,
+                    duration: 0.1,
+                    ease: "power2.out"
+                });
+            });
+        }
+
+        // Downloader DOM nodes
+        const videoUrlInput = document.getElementById('video-url');
+        const btnSubmit = document.getElementById('btn-submit');
+        const statusContainer = document.getElementById('status-container');
+        const statusText = document.getElementById('status-text');
+        const statusSub = document.getElementById('status-sub');
+        const messageBox = document.getElementById('message-box');
+        const resultCard = document.getElementById('result-card');
+
+        let currentProcessedUrl = '';
+        let optionsList = [];
+
+        async function pasteFromClipboard() {
+            try {
+                if (navigator.clipboard && navigator.clipboard.readText) {
+                    const text = await navigator.clipboard.readText();
+                    if (text) {
+                        videoUrlInput.value = text;
+                        showNotification("Enlace pegado correctamente.", "success");
+                        setTimeout(() => hideNotification(), 2000);
+                    } else {
+                        showNotification("El portapapeles está vacío.", "error");
+                    }
+                } else {
+                    showNotification("Clipboard API no soportada. Copia y pega manualmente.", "error");
+                }
+            } catch (err) {
+                showNotification("Permiso denegado para leer el portapapeles.", "error");
+            }
+        }
+
+        function suggestPlatform(name) {
+            showNotification(`Listo para procesar enlaces de ${name}. Pega la URL en el campo inferior.`, "success");
+            videoUrlInput.focus();
+            setTimeout(() => hideNotification(), 3000);
+        }
+
+        function showNotification(text, type) {
+            messageBox.innerText = text;
+            messageBox.className = `msg-box ${type}`;
+            messageBox.style.display = 'flex';
+        }
+
+        function hideNotification() {
+            messageBox.style.display = 'none';
+        }
+
+        // Fix tab styling active classes for light mode
+        function switchTab(type) {
+            document.getElementById('tab-video').classList.toggle('active', type === 'video');
+            document.getElementById('tab-audio').classList.toggle('active', type === 'audio');
+            
+            document.getElementById('video-formats-list').classList.toggle('active', type === 'video');
+            document.getElementById('audio-formats-list').classList.toggle('active', type === 'audio');
+        }
+
+        function fetchVideoInfo() {
+            const url = videoUrlInput.value.trim();
+            if (!url) {
+                showNotification("Por favor, ingresa un enlace válido.", "error");
+                return;
+            }
+
+            resultCard.style.display = 'none';
+            hideNotification();
+
+            // Open Loader Container with GSAP scale transitions
+            statusContainer.style.display = 'block';
+            statusText.innerText = "Analizando enlace...";
+            statusSub.innerText = "Negociando formatos con los servidores de video...";
+            btnSubmit.disabled = true;
+
+            gsap.fromTo(statusContainer, { scale: 0.96, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" });
+
+            fetch('/get_info', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ url: url })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw new Error(err.message || 'Error en el servidor'); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                statusContainer.style.display = 'none';
+                btnSubmit.disabled = false;
+
+                if (data.success) {
+                    currentProcessedUrl = data.original_url;
+                    optionsList = data.options;
+
+                    // Set visual cards details
+                    document.getElementById('result-thumb').src = data.thumbnail || 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=3540&auto=format&fit=crop';
+                    document.getElementById('result-title').innerText = data.title;
+                    document.getElementById('result-author').innerText = data.uploader;
+                    document.getElementById('result-duration').innerText = data.duration;
+
+                    // Render Selector list
+                    renderFormats(data.options);
+
+                    // Fade in results card
+                    resultCard.style.display = 'block';
+                    gsap.fromTo(resultCard, { scale: 0.95, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.2)" });
+                    
+                    switchTab('video');
+                    showNotification("Metadatos extraídos con éxito. Elige el formato para descargar.", "success");
+                } else {
+                    showNotification(data.message || "No se pudo obtener información del enlace.", "error");
+                }
+            })
+            .catch(error => {
+                statusContainer.style.display = 'none';
+                btnSubmit.disabled = false;
+                showNotification(error.message || "Error al conectar con los servidores de descarga.", "error");
+            });
+        }
+
+        function renderFormats(options) {
+            const videoList = document.getElementById('video-formats-list');
+            const audioList = document.getElementById('audio-formats-list');
+
+            videoList.innerHTML = '';
+            audioList.innerHTML = '';
+
+            options.forEach(opt => {
+                const row = document.createElement('div');
+                row.className = 'format-row';
+                
+                const isVideo = opt.type === 'video';
+                const icon = isVideo ? 'video' : 'music';
+
+                row.innerHTML = `
+                    <div class="format-info">
+                        <div class="format-icon">
+                            ${getSvgIcon(icon)}
+                        </div>
+                        <div class="format-meta">
+                            <div class="format-title">${opt.label}</div>
+                            <div class="format-weight">${getSvgIcon('hard-drive')} Peso: ${opt.size}</div>
+                        </div>
+                    </div>
+                    <button class="btn-download-action" onclick="downloadFile('${opt.id}', '${opt.label}')">
+                        ${getSvgIcon('download')} Descargar
+                    </button>
+                `;
+
+                if (isVideo) {
+                    videoList.appendChild(row);
+                } else {
+                    audioList.appendChild(row);
+                }
+            });
+        }
+
+        function downloadFile(optionId, label) {
+            if (!currentProcessedUrl) {
+                showNotification("Por favor busca e ingresa un enlace primero.", "error");
+                return;
+            }
+
+            resultCard.style.display = 'none';
+            hideNotification();
+
+            // Show status loading
+            statusContainer.style.display = 'block';
+            statusText.innerText = "Procesando descarga...";
+            statusSub.innerText = `Descargando e hilvanando formatos del video en el servidor: "${label}"...`;
+            
+            gsap.fromTo(statusContainer, { scale: 0.96, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" });
+
+            fetch('/download', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    url: currentProcessedUrl,
+                    option_id: optionId
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw new Error(err.message || 'Error al procesar la descarga'); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                statusContainer.style.display = 'none';
+                resultCard.style.display = 'block';
+
+                if (data.success && data.filename) {
+                    showNotification("¡Éxito! Transfiriendo archivo directamente al dispositivo...", "success");
+                    window.location.href = `/serve_file/${encodeURIComponent(data.filename)}`;
+                } else {
+                    showNotification(data.message || "Error al compilar y empaquetar el archivo multimedia.", "error");
+                }
+            })
+            .catch(error => {
+                statusContainer.style.display = 'none';
+                resultCard.style.display = 'block';
+                showNotification(error.message || "Error al completar la descarga física en el servidor.", "error");
+            });
+        }
+
+
+    </script>
 </body>
 </html>
