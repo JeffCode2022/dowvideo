@@ -170,12 +170,8 @@ def download_media(url, option_id):
         
         if media_type == 'video':
             ydl_opts = {
-                'format': f'bestvideo[height<={quality}][ext=mp4]+bestaudio[ext=m4a]/bestvideo[height<={quality}]+bestaudio/best[height<={quality}]/best',
+                'format': f'best[height<={quality}]/best',
                 'outtmpl': os.path.join(output_dir, f'%(title)s_{unique_suffix}.%(ext)s'),
-                'postprocessors': [{
-                    'key': 'FFmpegVideoConvertor',
-                    'preferedformat': target_ext,
-                }],
                 'quiet': True,
                 'no_warnings': True,
             }
@@ -183,11 +179,6 @@ def download_media(url, option_id):
             ydl_opts = {
                 'format': 'bestaudio/best',
                 'outtmpl': os.path.join(output_dir, f'%(title)s_{unique_suffix}.%(ext)s'),
-                'postprocessors': [{
-                    'key': 'FFmpegExtractAudio',
-                    'preferredcodec': target_ext,
-                    'preferredquality': quality,
-                }],
                 'quiet': True,
                 'no_warnings': True,
             }
@@ -195,57 +186,31 @@ def download_media(url, option_id):
         res = option_id.split('_')[1]
         if res == 'best':
             ydl_opts = {
-                'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
+                'format': 'best',
                 'outtmpl': os.path.join(output_dir, f'%(title)s_{unique_suffix}.%(ext)s'),
                 'quiet': True,
                 'no_warnings': True,
             }
         else:
             ydl_opts = {
-                'format': f'bestvideo[height<={res}][ext=mp4]+bestaudio[ext=m4a]/bestvideo[height<={res}]+bestaudio/best[height<={res}]/best',
+                'format': f'best[height<={res}]/best',
                 'outtmpl': os.path.join(output_dir, f'%(title)s_{unique_suffix}.%(ext)s'),
                 'quiet': True,
                 'no_warnings': True,
             }
-    elif option_id == 'audio_mp3_320':
+    elif option_id.startswith('audio_'):
         ydl_opts = {
             'format': 'bestaudio/best',
             'outtmpl': os.path.join(output_dir, f'%(title)s_{unique_suffix}.%(ext)s'),
-            'postprocessors': [{
-                'key': 'FFmpegExtractAudio',
-                'preferredcodec': 'mp3',
-                'preferredquality': '320',
-            }],
             'quiet': True,
             'no_warnings': True,
-        }
-    elif option_id == 'audio_mp3_192':
-        ydl_opts = {
-            'format': 'bestaudio/best',
-            'outtmpl': os.path.join(output_dir, f'%(title)s_{unique_suffix}.%(ext)s'),
-            'postprocessors': [{
-                'key': 'FFmpegExtractAudio',
-                'preferredcodec': 'mp3',
-                'preferredquality': '192',
-            }],
-            'quiet': True,
-            'no_warnings': True,
-        }
-    elif option_id == 'audio_m4a':
-        ydl_opts = {
-            'format': 'bestaudio[ext=m4a]/bestaudio/best',
-            'outtmpl': os.path.join(output_dir, f'%(title)s_{unique_suffix}.%(ext)s'),
-            'quiet': True,
-            'no_warnings': True,
-            'ffmpeg_location': os.path.join(r'C:\Program Files\ffmpeg\bin', 'ffmpeg.exe'),
         }
     else: # Default
         ydl_opts = {
-            'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best',
+            'format': 'best',
             'outtmpl': os.path.join(output_dir, f'%(title)s_{unique_suffix}.%(ext)s'),
             'quiet': True,
             'no_warnings': True,
-            'ffmpeg_location': os.path.join(r'C:\Program Files\ffmpeg\bin', 'ffmpeg.exe'),
         }
         
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -271,14 +236,13 @@ def download_media(url, option_id):
                 }
         except Exception as e:
             # Fallback for audio conversions if ffmpeg is missing
-            if 'audio_mp3_' in option_id:
+            if 'audio_' in option_id:
                 try:
                     ydl_opts_fallback = {
                         'format': 'bestaudio/best',
                         'outtmpl': os.path.join(output_dir, f'%(title)s_{unique_suffix}.%(ext)s'),
                         'quiet': True,
                         'no_warnings': True,
-                        'ffmpeg_location': os.path.join(r'C:\Program Files\ffmpeg\bin', 'ffmpeg.exe'),
                     }
                     with yt_dlp.YoutubeDL(ydl_opts_fallback) as ydl_fb:
                         info = ydl_fb.extract_info(url, download=True)
