@@ -1,4 +1,5 @@
 # app.py
+# pyrefly: ignore [missing-import]
 from flask import Flask, render_template, request, send_file, jsonify
 import yt_dlp
 import os
@@ -12,12 +13,24 @@ def get_ydl_opts(base_opts=None):
     if base_opts is None:
         base_opts = {}
     
-    # Buscar archivo de cookies, priorizando el secreto permanente de Render
-    cookies_path = os.environ.get('COOKIES_PATH', 'cookies.txt')
-    if os.path.exists('/etc/secrets/cookies.txt'):
-        base_opts['cookiefile'] = '/etc/secrets/cookies.txt'
-    elif os.path.exists(cookies_path):
-        base_opts['cookiefile'] = cookies_path
+    # Resoluciones robustas de cookies con jerarquía de 3 niveles:
+    # 1. uploaded_cookies.txt (manual upload, highest priority)
+    # 2. /etc/secrets/cookies.txt (Render secret, medium priority)
+    # 3. cookies.txt or COOKIES_PATH env var (Git tracked / default, lowest priority)
+    uploaded_path = 'uploaded_cookies.txt'
+    secret_path = '/etc/secrets/cookies.txt'
+    default_path = os.environ.get('COOKIES_PATH', 'cookies.txt')
+    
+    active_cookie_file = None
+    if os.path.exists(uploaded_path) and os.path.getsize(uploaded_path) > 0:
+        active_cookie_file = uploaded_path
+    elif os.path.exists(secret_path) and os.path.getsize(secret_path) > 0:
+        active_cookie_file = secret_path
+    elif os.path.exists(default_path) and os.path.getsize(default_path) > 0:
+        active_cookie_file = default_path
+        
+    if active_cookie_file:
+        base_opts['cookiefile'] = active_cookie_file
         
     return base_opts
 
@@ -34,8 +47,8 @@ def get_video_info(url):
         'no_warnings': True,
         'extract_flat': False,
     })
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        try:
+    try:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=False)
             
             # Format duration to MM:SS
@@ -149,11 +162,11 @@ def get_video_info(url):
                 'options': available_options,
                 'original_url': url
             }
-        except Exception as e:
-            return {
-                'success': False,
-                'message': f'Error al obtener información: {str(e)}'
-            }
+    except Exception as e:
+        return {
+            'success': False,
+            'message': f'Error al obtener información: {str(e)}'
+        }
 
 def download_media(url, option_id):
     output_dir = os.path.join(os.path.dirname(__file__), 'downloads')
@@ -227,8 +240,8 @@ def download_media(url, option_id):
         }
         
     ydl_opts = get_ydl_opts(ydl_opts)
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        try:
+    try:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=True)
             downloaded_file = None
             for f in os.listdir(output_dir):
@@ -248,48 +261,51 @@ def download_media(url, option_id):
                     'success': False,
                     'message': 'No se pudo encontrar el archivo descargado'
                 }
-        except Exception as e:
-            # Fallback for audio conversions if ffmpeg is missing
-            if 'audio_' in option_id:
-                try:
-                    ydl_opts_fallback = get_ydl_opts({
-                        'format': 'bestaudio/best',
-                        'outtmpl': os.path.join(output_dir, f'%(title)s_{unique_suffix}.%(ext)s'),
-                        'quiet': True,
-                        'no_warnings': True,
-                    })
-                    with yt_dlp.YoutubeDL(ydl_opts_fallback) as ydl_fb:
-                        info = ydl_fb.extract_info(url, download=True)
-                        downloaded_file = None
-                        for f in os.listdir(output_dir):
-                            if f"_{unique_suffix}." in f:
-                                downloaded_file = os.path.join(output_dir, f)
-                                break
-                        if downloaded_file and os.path.exists(downloaded_file):
-                            return {
-                                'success': True,
-                                'file_path': downloaded_file,
-                                'filename': os.path.basename(downloaded_file),
-                                'title': info.get('title', 'audio')
-                            }
-                except Exception as fallback_err:
-                    return {
-                        'success': False,
-                        'message': f'Error en descarga y fallback de audio: {str(fallback_err)}'
-                    }
-            return {
-                'success': False,
-                'message': f'Error al descargar: {str(e)}'
-            }
+    except Exception as e:
+        # Fallback for audio conversions if ffmpeg is missing
+        if 'audio_' in option_id:
+            try:
+                ydl_opts_fallback = get_ydl_opts({
+                    'format': 'bestaudio/best',
+                    'outtmpl': os.path.join(output_dir, f'%(title)s_{unique_suffix}.%(ext)s'),
+                    'quiet': True,
+                    'no_warnings': True,
+                })
+                with yt_dlp.YoutubeDL(ydl_opts_fallback) as ydl_fb:
+                    info = ydl_fb.extract_info(url, download=True)
+                    downloaded_file = None
+                    for f in os.listdir(output_dir):
+                        if f"_{unique_suffix}." in f:
+                            downloaded_file = os.path.join(output_dir, f)
+                            break
+                    if downloaded_file and os.path.exists(downloaded_file):
+                        return {
+                            'success': True,
+                            'file_path': downloaded_file,
+                            'filename': os.path.basename(downloaded_file),
+                            'title': info.get('title', 'audio')
+                        }
+            except Exception as fallback_err:
+                return {
+                    'success': False,
+                    'message': f'Error en descarga y fallback de audio: {str(fallback_err)}'
+                }
+        return {
+            'success': False,
+            'message': f'Error al descargar: {str(e)}'
+        }
 def check_cookies_status():
-    cookies_path = os.environ.get('COOKIES_PATH', 'cookies.txt')
-    active_path = None
+    uploaded_path = 'uploaded_cookies.txt'
+    secret_path = '/etc/secrets/cookies.txt'
+    default_path = os.environ.get('COOKIES_PATH', 'cookies.txt')
     
-    # Priorizar el archivo de secretos de Render sobre el archivo git/local
-    if os.path.exists('/etc/secrets/cookies.txt'):
-        active_path = '/etc/secrets/cookies.txt'
-    elif os.path.exists(cookies_path):
-        active_path = cookies_path
+    active_path = None
+    if os.path.exists(uploaded_path) and os.path.getsize(uploaded_path) > 0:
+        active_path = uploaded_path
+    elif os.path.exists(secret_path) and os.path.getsize(secret_path) > 0:
+        active_path = secret_path
+    elif os.path.exists(default_path) and os.path.getsize(default_path) > 0:
+        active_path = default_path
         
     if active_path:
         stat = os.stat(active_path)
@@ -303,7 +319,7 @@ def check_cookies_status():
     
     return {
         'active': False,
-        'path': cookies_path,
+        'path': default_path,
         'size_bytes': 0,
         'modified': 'Ninguna'
     }
@@ -350,9 +366,9 @@ def api_upload_cookies():
         }), 400
         
     try:
-        # Write to cookies.txt
-        cookies_path = os.environ.get('COOKIES_PATH', 'cookies.txt')
-        with open(cookies_path, 'w', encoding='utf-8') as f:
+        # Write to uploaded_cookies.txt for runtime persistence
+        uploaded_path = 'uploaded_cookies.txt'
+        with open(uploaded_path, 'w', encoding='utf-8') as f:
             f.write(cookies_content)
             
         status = check_cookies_status()

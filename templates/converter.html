@@ -1354,7 +1354,12 @@
             })
             .then(response => {
                 if (!response.ok) {
-                    return response.json().then(err => { throw new Error(err.message || 'Error en el servidor'); });
+                    const contentType = response.headers.get('content-type');
+                    if (contentType && contentType.includes('application/json')) {
+                        return response.json().then(err => { throw new Error(err.message || 'Error en el servidor'); });
+                    } else {
+                        throw new Error('Servidor temporalmente no disponible o en congestión de red. Por favor, intenta de nuevo más tarde.');
+                    }
                 }
                 return response.json();
             })
@@ -1481,7 +1486,12 @@
             })
             .then(response => {
                 if (!response.ok) {
-                    return response.json().then(err => { throw new Error(err.message || 'Error al procesar la conversión'); });
+                    const contentType = response.headers.get('content-type');
+                    if (contentType && contentType.includes('application/json')) {
+                        return response.json().then(err => { throw new Error(err.message || 'Error al procesar la conversión'); });
+                    } else {
+                        throw new Error('El servidor experimentó una restricción temporal o error de red al procesar tu descarga. Inténtalo de nuevo más tarde.');
+                    }
                 }
                 return response.json();
             })
