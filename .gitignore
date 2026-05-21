@@ -1,2 +1,30 @@
+# Entorno virtual de Python
+venv/
+.venv/
+env/
+
+# Archivos de caché de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Archivos temporales de descargas
+downloads/*
+!downloads/.gitkeep
+
+# Binarios de ffmpeg locales y temporales
+ffmpeg
+ffprobe
 ffmpeg.exe
 ffprobe.exe
+ffmpeg.tar.xz
+
+# Archivos de configuración de editores y sistema
+.DS_Store
+.idea/
+.vscode/
+.gemini/
+scratch/
+*.txt
+!template_web_3d.txt
