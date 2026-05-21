@@ -12,12 +12,12 @@ def get_ydl_opts(base_opts=None):
     if base_opts is None:
         base_opts = {}
     
-    # Buscar archivo de cookies en la ruta especificada por variable de entorno o por defecto
+    # Buscar archivo de cookies, priorizando el secreto permanente de Render
     cookies_path = os.environ.get('COOKIES_PATH', 'cookies.txt')
-    if os.path.exists(cookies_path):
-        base_opts['cookiefile'] = cookies_path
-    elif os.path.exists('/etc/secrets/cookies.txt'):
+    if os.path.exists('/etc/secrets/cookies.txt'):
         base_opts['cookiefile'] = '/etc/secrets/cookies.txt'
+    elif os.path.exists(cookies_path):
+        base_opts['cookiefile'] = cookies_path
         
     return base_opts
 
@@ -285,10 +285,11 @@ def check_cookies_status():
     cookies_path = os.environ.get('COOKIES_PATH', 'cookies.txt')
     active_path = None
     
-    if os.path.exists(cookies_path):
-        active_path = cookies_path
-    elif os.path.exists('/etc/secrets/cookies.txt'):
+    # Priorizar el archivo de secretos de Render sobre el archivo git/local
+    if os.path.exists('/etc/secrets/cookies.txt'):
         active_path = '/etc/secrets/cookies.txt'
+    elif os.path.exists(cookies_path):
+        active_path = cookies_path
         
     if active_path:
         stat = os.stat(active_path)
