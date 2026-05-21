@@ -281,6 +281,31 @@ def download_media(url, option_id):
                 'success': False,
                 'message': f'Error al descargar: {str(e)}'
             }
+def check_cookies_status():
+    cookies_path = os.environ.get('COOKIES_PATH', 'cookies.txt')
+    active_path = None
+    
+    if os.path.exists(cookies_path):
+        active_path = cookies_path
+    elif os.path.exists('/etc/secrets/cookies.txt'):
+        active_path = '/etc/secrets/cookies.txt'
+        
+    if active_path:
+        stat = os.stat(active_path)
+        modified_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(stat.st_mtime))
+        return {
+            'active': True,
+            'path': active_path,
+            'size_bytes': stat.st_size,
+            'modified': modified_time
+        }
+    
+    return {
+        'active': False,
+        'path': cookies_path,
+        'size_bytes': 0,
+        'modified': 'Ninguna'
+    }
 
 @app.route('/')
 def home():
@@ -289,6 +314,57 @@ def home():
 @app.route('/converter')
 def converter():
     return send_file(os.path.join(os.path.dirname(__file__), 'templates', 'converter.html'))
+
+# Secret admin cookies path defined in environment variables for absolute privacy
+ADMIN_COOKIES_PATH = os.environ.get('ADMIN_COOKIES_PATH', 'flowget-admin-private-cookies').strip('/')
+
+@app.route(f'/{ADMIN_COOKIES_PATH}')
+def cookies_dashboard():
+    status = check_cookies_status()
+    has_password = 'ADMIN_PASSWORD' in os.environ and bool(os.environ['ADMIN_PASSWORD'].strip())
+    return render_template('cookies.html', status=status, has_password=has_password, admin_path=ADMIN_COOKIES_PATH)
+
+@app.route(f'/api/{ADMIN_COOKIES_PATH}/status', methods=['GET'])
+def api_cookie_status():
+    return jsonify(check_cookies_status())
+
+@app.route(f'/api/{ADMIN_COOKIES_PATH}/upload', methods=['POST'])
+def api_upload_cookies():
+    data = request.get_json() or {}
+    cookies_content = data.get('cookies', '').strip()
+    password_provided = data.get('password', '')
+    
+    # Check admin password if configured
+    admin_password = os.environ.get('ADMIN_PASSWORD', '').strip()
+    if admin_password and password_provided != admin_password:
+        return jsonify({
+            'success': False,
+            'message': 'Contraseña de administrador incorrecta. No se han guardado los cambios.'
+        }), 403
+        
+    if not cookies_content:
+        return jsonify({
+            'success': False,
+            'message': 'El contenido de las cookies está vacío.'
+        }), 400
+        
+    try:
+        # Write to cookies.txt
+        cookies_path = os.environ.get('COOKIES_PATH', 'cookies.txt')
+        with open(cookies_path, 'w', encoding='utf-8') as f:
+            f.write(cookies_content)
+            
+        status = check_cookies_status()
+        return jsonify({
+            'success': True,
+            'message': 'Cookies temporales actualizadas con éxito en el servidor.',
+            'status': status
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error al escribir el archivo de cookies: {str(e)}'
+        }), 500
 
 @app.route('/get_info', methods=['POST'])
 def get_info():

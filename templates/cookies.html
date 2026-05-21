@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ FlowGet - Panel de Configuración de Cookies</title>
+    <meta name="description" content="Gestiona y configura las cookies de YouTube en FlowGet para evitar bloqueos y verificaciones antibot de forma segura y sencilla.">
+    
+    <!-- Google Fonts: Geist & Caveat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Geist:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <style>
+        :root {
+            --bg-primary: #f6f5f4;
+            --accent-orange: #ff6321;
+            --accent-indigo: #5d5fef;
+            --text-primary: #0a0a0c;
+            --text-secondary: #27272a;
+            --text-muted: #71717a;
+            --glass-bg: rgba(255, 255, 255, 0.65);
+            --glass-border: rgba(9, 9, 11, 0.06);
+            --glass-shadow: rgba(0, 0, 0, 0.04);
+            --inset-highlight: rgba(255, 255, 255, 0.85);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Geist', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+            background-image: radial-gradient(rgba(9, 9, 11, 0.05) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        .bg-orbs-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.16;
+            mix-blend-mode: multiply;
+            animation: orbFloat 24s infinite alternate ease-in-out;
+        }
+
+        .orb-orange {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--accent-orange) 0%, transparent 80%);
+            top: -200px;
+            left: -150px;
+        }
+
+        .orb-indigo {
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, var(--accent-indigo) 0%, transparent 80%);
+            bottom: 5%;
+            right: -250px;
+            animation-duration: 30s;
+            animation-delay: -6s;
+        }
+
+        @keyframes orbFloat {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            100% { transform: translate(100px, 80px) scale(1.1) rotate(30deg); }
+        }
+
+        header {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1200px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px) saturate(190%);
+            -webkit-backdrop-filter: blur(25px) saturate(190%);
+            border: 1px solid var(--glass-border);
+            border-radius: 100px;
+            padding: 14px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.03), inset 0 1px 0 var(--inset-highlight);
+        }
+
+        .logo-container {
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .logo-container span {
+            color: var(--accent-orange);
+        }
+
+        nav {
+            display: flex;
+            gap: 32px;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: color 0.25s ease;
+            position: relative;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--accent-orange);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent-orange);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        nav a:hover::after, nav a.active::after {
+            width: 16px;
+        }
+
+        .nav-btn {
+            background: #09090b;
+            border: 1px solid #09090b;
+            color: #ffffff;
+            padding: 9px 20px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .nav-btn:hover {
+            background: var(--accent-orange);
+            border-color: var(--accent-orange);
+            box-shadow: 0 6px 18px rgba(255, 99, 33, 0.3);
+        }
+
+        /* Container & Cards Layout */
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 140px 24px 80px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .page-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(93, 95, 239, 0.06);
+            border: 1px solid rgba(93, 95, 239, 0.15);
+            color: var(--accent-indigo);
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .page-header h1 {
+            font-size: 2.8rem;
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            color: var(--text-primary);
+            line-height: 1.2;
+            margin-bottom: 12px;
+        }
+
+        .page-header h1 span {
+            color: var(--accent-orange);
+        }
+
+        .page-header p.subtitle {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            max-width: 650px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            align-items: start;
+        }
+
+        .panel-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(35px) saturate(190%);
+            -webkit-backdrop-filter: blur(35px) saturate(190%);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 20px 45px var(--glass-shadow), inset 0 1px 0 var(--inset-highlight);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .card-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(9, 9, 11, 0.05);
+            padding-bottom: 16px;
+        }
+
+        .card-title-row h2 {
+            font-size: 1.25rem;
+            font-weight: 850;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Status Badge */
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 100px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .status-pill.active {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: #0d9464;
+        }
+
+        .status-pill.inactive {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #ea3838;
+        }
+
+        /* Status Info Fields */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .info-item {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(9, 9, 11, 0.04);
+            border-radius: 14px;
+            padding: 14px;
+        }
+
+        .info-label {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 0.88rem;
+            font-weight: 750;
+            color: var(--text-primary);
+            word-break: break-all;
+        }
+
+        /* Cookies Form */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+
+        .form-group textarea {
+            width: 100%;
+            height: 180px;
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(9, 9, 11, 0.08);
+            border-radius: 14px;
+            padding: 14px;
+            font-family: monospace;
+            font-size: 0.78rem;
+            color: var(--text-primary);
+            resize: none;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+
+        .form-group textarea:focus {
+            border-color: var(--accent-orange);
+            background: #ffffff;
+            box-shadow: 0 0 15px rgba(255, 99, 33, 0.06);
+        }
+
+        .form-group input[type="password"] {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(9, 9, 11, 0.08);
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+
+        .form-group input[type="password"]:focus {
+            border-color: var(--accent-orange);
+            background: #ffffff;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: var(--accent-orange);
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            font-size: 0.9rem;
+            font-weight: 750;
+            border-radius: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 6px 18px rgba(255, 99, 33, 0.2);
+            transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(255, 99, 33, 0.32);
+            filter: brightness(1.05);
+        }
+
+        .btn-submit:active {
+            transform: scale(0.98);
+        }
+
+        /* Message Box styling */
+        .msg-box {
+            display: none;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            align-items: center;
+            gap: 10px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .msg-box.error {
+            background: rgba(239, 68, 68, 0.06);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            color: #ea3838;
+        }
+
+        .msg-box.success {
+            background: rgba(16, 185, 129, 0.06);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+            color: #0d9464;
+        }
+
+        /* Guide Card (Agnos Style) */
+        .guide-steps-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .step-item {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(9, 9, 11, 0.04);
+            border-radius: 18px;
+            padding: 20px;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            transition: all 0.3s ease;
+        }
+
+        .step-item:hover {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(93, 95, 239, 0.15);
+            transform: translateX(3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.015);
+        }
+
+        .step-num {
+            background: var(--accent-indigo);
+            color: #ffffff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 900;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(93, 95, 239, 0.25);
+        }
+
+        .step-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .step-title {
+            font-size: 0.92rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .step-desc {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .step-link {
+            color: var(--accent-indigo);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.8rem;
+            margin-top: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.2s ease;
+        }
+
+        .step-link:hover {
+            color: var(--accent-orange);
+        }
+
+        .code-block {
+            background: #09090b;
+            color: #d4d4d8;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.72rem;
+            margin-top: 6px;
+            border: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-copy-code {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: #ffffff;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-copy-code:hover {
+            background: var(--accent-indigo);
+        }
+
+        /* Handwritten annotation matching index.html */
+        .handwritten-arrow-wrapper {
+            position: absolute;
+            left: 20px;
+            bottom: -60px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            pointer-events: none;
+            user-select: none;
+            z-index: 20;
+        }
+
+        .handwritten-arrow-wrapper svg {
+            width: 45px;
+            height: 45px;
+            transform: scaleY(-1) rotate(-110deg);
+            opacity: 0.85;
+            color: var(--accent-orange);
+        }
+
+        .handwritten-text {
+            font-family: 'Caveat', cursive;
+            font-size: 1.8rem;
+            color: var(--accent-orange);
+            transform: rotate(2deg);
+            white-space: nowrap;
+            text-shadow: 0 0 15px rgba(255, 99, 33, 0.1);
+        }
+
+        footer {
+            max-width: 1200px;
+            margin: 80px auto 40px;
+            padding: 40px 24px 0;
+            border-top: 1px solid rgba(9, 9, 11, 0.04);
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-grid {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+            margin-bottom: 20px;
+        }
+
+        .footer-logo {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--text-primary);
+            letter-spacing: -0.04em;
+        }
+
+        .footer-logo span {
+            color: var(--accent-orange);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 28px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: color 0.2s ease;
+            font-weight: 600;
+        }
+
+        .footer-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .footer-bottom {
+            font-size: 0.75rem;
+            color: #a1a1aa;
+            font-weight: 500;
+            padding-top: 20px;
+            border-top: 1px solid rgba(9, 9, 11, 0.02);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media(max-width: 992px) {
+            .grid-layout {
+                grid-template-columns: 1fr;
+            }
+            .handwritten-arrow-wrapper {
+                display: none;
+            }
+        }
+
+        @media(max-width: 768px) {
+            header { padding: 10px 20px; }
+            nav { display: none; }
+            .container { padding: 120px 16px 60px; }
+            .page-header h1 { font-size: 2.1rem; }
+            .panel-card { padding: 24px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Orbs -->
+    <div class="bg-orbs-container">
+        <div class="bg-orb orb-orange"></div>
+        <div class="bg-orb orb-indigo"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <a href="/" class="logo-container">
+            Flow<span>Get</span> ⚡
+        </a>
+        <nav>
+            <a href="/">Inicio</a>
+            <a href="/#features">Características</a>
+            <a href="/#platforms">Plataformas</a>
+            <a href="/converter">Convertidor</a>
+        </nav>
+        <a href="/" class="nav-btn">Descargar</a>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <div class="page-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;margin-right:4px;display:inline-block;vertical-align:middle;">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+                Gestión de Autenticación YouTube
+            </div>
+            <h1>Bypass de <span>Seguridad</span> Antibot</h1>
+            <p class="subtitle">Administra el archivo de cookies de YouTube para tu servidor. Esto evita el bloqueo "Sign in to confirm you're not a bot" en Render.com.</p>
+        </div>
+
+        <div class="grid-layout">
+            <!-- Left Side: Cookies State & Upload Form -->
+            <div class="panel-card" id="cookies-status-card">
+                <div class="card-title-row">
+                    <h2>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-orange)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.39-2"></path></svg>
+                        Estado del Servidor
+                    </h2>
+                    <span id="active-pill" class="status-pill {% if status.active %}active{% else %}inactive{% endif %}">
+                        {% if status.active %}Activo 🟢{% else %}Inactivo 🔴{% endif %}
+                    </span>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Ruta del Archivo</div>
+                        <div class="info-value" id="cookies-path">{{ status.path }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Tamaño en Disco</div>
+                        <div class="info-value" id="cookies-size">{{ status.size_bytes | default(0) }} bytes</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Última Modificación</div>
+                        <div class="info-value" id="cookies-modified">{{ status.modified | default('Ninguna') }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Tipo de Persistencia</div>
+                        <div class="info-value" id="cookies-persistence">
+                            {% if '/etc/secrets/' in status.path %}
+                            Render Permanente (Secreto) ✨
+                            {% else %}
+                            Temporal (Epímero) 🕒
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form to paste cookies -->
+                <div class="form-group">
+                    <label for="cookies-content">Pegar contenido de cookies.txt (Formato Netscape)</label>
+                    <textarea id="cookies-content" placeholder="# Netscape HTTP Cookie File&#10;# http://curl.haxx.se/rfc/cookie_spec.html&#10;.youtube.com	TRUE	/	TRUE	1800000000	__Secure-3PAPISID	...&#10;.youtube.com	TRUE	/	TRUE	1800000000	__Secure-3PSID	..." required></textarea>
+                </div>
+
+                {% if has_password %}
+                <div class="form-group" id="pass-group">
+                    <label for="admin-password">Contraseña de Administrador</label>
+                    <input type="password" id="admin-password" placeholder="Introduce la contraseña para guardar..." required>
+                </div>
+                {% endif %}
+
+                <button class="btn-submit" id="btn-save" onclick="saveCookies()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                    Actualizar Cookies Temporales
+                </button>
+
+                <div class="msg-box" id="message-box"></div>
+                
+                <p style="font-size:0.75rem; color: var(--text-muted); line-height: 1.4; text-align: center;">
+                    💡 <strong>Nota:</strong> Guardar las cookies desde este formulario las mantiene activas de forma temporal. Se borrarán al reiniciar el servidor en Render. Para guardarlas de forma permanente, sigue la guía de la derecha.
+                </p>
+            </div>
+
+            <!-- Right Side: Step-by-step Guide -->
+            <div class="panel-card">
+                <div class="card-title-row">
+                    <h2>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-indigo)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                        Guía de Configuración
+                    </h2>
+                </div>
+
+                <div class="guide-steps-container">
+                    <div class="step-item">
+                        <div class="step-num">1</div>
+                        <div class="step-content">
+                            <div class="step-title">Instala la Extensión del Navegador</div>
+                            <div class="step-desc">Necesitamos exportar tus cookies de YouTube en formato estándar Netscape. Descarga la extensión oficial recomendada:</div>
+                            <a href="https://chromewebstore.google.com/detail/get-cookiestxt-locally/ccmkkkkifmghhaddnkionnndeaaiidof" target="_blank" class="step-link">
+                                Get cookies.txt LOCALLY (Chrome / Edge / Opera) ➔
+                            </a>
+                            <a href="https://addons.mozilla.org/es/firefox/addon/get-cookies-txt-locally/" target="_blank" class="step-link">
+                                Get cookies.txt LOCALLY (Firefox) ➔
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-num">2</div>
+                        <div class="step-content">
+                            <div class="step-title">Entra a YouTube y Exporta tus Cookies</div>
+                            <div class="step-desc">
+                                Ve a <a href="https://www.youtube.com" target="_blank" style="color:var(--accent-orange);font-weight:bold;text-decoration:none;">YouTube.com</a> e inicia sesión con una cuenta (se recomienda una <strong>cuenta secundaria o de prueba</strong> para mayor seguridad). 
+                                Una vez iniciada la sesión, abre la extensión y presiona en **"Export"** o **"Descargar cookies.txt"**.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <div class="step-title">Configúralo de forma Permanente en Render</div>
+                            <div class="step-desc">
+                                El disco de Render es temporal, pero puedes crear un **archivo secreto** persistente:
+                                <ol style="margin-left: 20px; margin-top: 8px; display:flex; flex-direction:column; gap:4px;">
+                                    <li>Ve a tu Panel de Control de <strong>Render.com</strong>.</li>
+                                    <li>Selecciona tu servicio web (<strong>dowvideo-90qt</strong>).</li>
+                                    <li>Haz clic en la pestaña <strong>"Environment"</strong> (Entorno) a la izquierda.</li>
+                                    <li>Desliza hasta <strong>"Secret Files"</strong> y haz clic en <strong>"Add Secret File"</strong>.</li>
+                                    <li>Configura la ruta exacta del archivo:</li>
+                                </ol>
+                            </div>
+                            <div class="code-block">
+                                <span id="secret-path-code">/etc/secrets/cookies.txt</span>
+                                <button class="btn-copy-code" onclick="copySecretPath()">Copiar</button>
+                            </div>
+                            <div class="step-desc" style="margin-top: 6px;">
+                                Abre el archivo `cookies.txt` que descargaste en el Paso 2 con el bloc de notas, copia todo su contenido y pégalo en el recuadro de contenido en Render. Guarda los cambios.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-num">4</div>
+                        <div class="step-content">
+                            <div class="step-title">¡Listo! La App se Autoconfigurará</div>
+                            <div class="step-desc">
+                                Render aplicará automáticamente el archivo de secretos y montará las cookies de manera permanente en cada despliegue. FlowGet lo detectará de inmediato y todos tus problemas de descarga de YouTube desaparecerán.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Caveat / Arrow decoration -->
+                <div class="handwritten-arrow-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 9l6-6m0 0l6 6m-6-6v12a9 9 0 11-18 0v-1.5" />
+                    </svg>
+                    <div class="handwritten-text">¡Sigue estos pasos y adiós bloqueos! 🚀</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-logo">
+                Flow<span>Get</span> ⚡
+            </div>
+            <div class="footer-links">
+                <a href="/">Inicio</a>
+                <a href="/#features">Características</a>
+                <a href="/#platforms">Plataformas</a>
+                <a href="/converter">Convertidor</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2026 FlowGet Inc. Configuración de bypass antibot premium.
+        </div>
+    </footer>
+
+    <script>
+        const messageBox = document.getElementById('message-box');
+        const activePill = document.getElementById('active-pill');
+        const cookiesSize = document.getElementById('cookies-size');
+        const cookiesModified = document.getElementById('cookies-modified');
+        const cookiesPersistence = document.getElementById('cookies-persistence');
+        const btnSave = document.getElementById('btn-save');
+
+        function showNotification(text, type) {
+            messageBox.innerText = text;
+            messageBox.className = `msg-box ${type}`;
+            messageBox.style.display = 'flex';
+            gsap.fromTo(messageBox, { scale: 0.95, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.25 });
+        }
+
+        function hideNotification() {
+            messageBox.style.display = 'none';
+        }
+
+        function copySecretPath() {
+            navigator.clipboard.writeText('/etc/secrets/cookies.txt')
+                .then(() => {
+                    alert('Ruta de archivo copiada al portapapeles: /etc/secrets/cookies.txt');
+                })
+                .catch(() => {
+                    alert('Error al copiar. Copia manualmente: /etc/secrets/cookies.txt');
+                });
+        }
+
+        function saveCookies() {
+            const content = document.getElementById('cookies-content').value.trim();
+            const passwordField = document.getElementById('admin-password');
+            const password = passwordField ? passwordField.value : '';
+
+            if (!content) {
+                showNotification("Por favor, pega el contenido de tu cookies.txt.", "error");
+                return;
+            }
+
+            if (!content.includes('youtube.com') && !content.includes('googlevideo.com')) {
+                if (!confirm("El contenido ingresado no parece tener cookies válidas para YouTube (.youtube.com). ¿Deseas guardarlo de todas formas?")) {
+                    return;
+                }
+            }
+
+            hideNotification();
+            btnSave.disabled = true;
+            btnSave.innerText = "Guardando en el servidor...";
+
+            fetch('/api/{{ admin_path }}/upload', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    cookies: content,
+                    password: password
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                btnSave.disabled = false;
+                btnSave.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> Actualizar Cookies Temporales`;
+                
+                if (data.success) {
+                    showNotification(data.message, "success");
+                    document.getElementById('cookies-content').value = '';
+                    if (passwordField) passwordField.value = '';
+
+                    // Update UI status immediately
+                    activePill.className = "status-pill active";
+                    activePill.innerText = "Activo 🟢";
+                    cookiesSize.innerText = `${data.status.size_bytes} bytes`;
+                    cookiesModified.innerText = data.status.modified;
+                    cookiesPersistence.innerText = "Temporal (Epímero) 🕒";
+                } else {
+                    showNotification(data.message, "error");
+                }
+            })
+            .catch(err => {
+                btnSave.disabled = false;
+                btnSave.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> Actualizar Cookies Temporales`;
+                showNotification("Error de red al intentar guardar las cookies.", "error");
+            });
+        }
+
+        // Entrance GSAP animation
+        gsap.from(".panel-card", {
+            opacity: 0,
+            y: 30,
+            duration: 0.6,
+            stagger: 0.15,
+            ease: "power3.out"
+        });
+    </script>
+</body>
+</html>

@@ -1307,7 +1307,20 @@
 
         // Notifications
         function showNotification(text, type) {
-            messageBox.innerText = text;
+            if (type === 'error' && (text.includes('confirm you') || text.includes('bot') || text.includes('cookies') || text.includes('Sign in to confirm'))) {
+                messageBox.innerHTML = `
+                    <div style="display:flex; flex-direction:column; gap:8px; width:100%; text-align:left;">
+                        <div style="display:flex; align-items:center; gap:8px; font-weight:bold;">
+                            <span style="font-size:1.15rem;">⚠️</span> Restricción Temporal de YouTube
+                        </div>
+                        <div style="font-size:0.8rem; font-weight:500; line-height:1.4; color:rgba(234, 56, 56, 0.9);">
+                            El servidor está experimentando una alta congestión de red o limitaciones de conexión temporales con YouTube. Por favor, intenta de nuevo más tarde o con un video diferente.
+                        </div>
+                    </div>
+                `;
+            } else {
+                messageBox.innerText = text;
+            }
             messageBox.className = `msg-box ${type}`;
             messageBox.style.display = 'flex';
         }
