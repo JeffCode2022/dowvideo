@@ -8,6 +8,19 @@ import re
 
 app = Flask(__name__)
 
+def get_ydl_opts(base_opts=None):
+    if base_opts is None:
+        base_opts = {}
+    
+    # Buscar archivo de cookies en la ruta especificada por variable de entorno o por defecto
+    cookies_path = os.environ.get('COOKIES_PATH', 'cookies.txt')
+    if os.path.exists(cookies_path):
+        base_opts['cookiefile'] = cookies_path
+    elif os.path.exists('/etc/secrets/cookies.txt'):
+        base_opts['cookiefile'] = '/etc/secrets/cookies.txt'
+        
+    return base_opts
+
 def is_valid_url(url):
     try:
         result = urlparse(url)
@@ -16,11 +29,11 @@ def is_valid_url(url):
         return False
 
 def get_video_info(url):
-    ydl_opts = {
+    ydl_opts = get_ydl_opts({
         'quiet': True,
         'no_warnings': True,
         'extract_flat': False,
-    }
+    })
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         try:
             info = ydl.extract_info(url, download=False)
@@ -213,6 +226,7 @@ def download_media(url, option_id):
             'no_warnings': True,
         }
         
+    ydl_opts = get_ydl_opts(ydl_opts)
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         try:
             info = ydl.extract_info(url, download=True)
@@ -238,12 +252,12 @@ def download_media(url, option_id):
             # Fallback for audio conversions if ffmpeg is missing
             if 'audio_' in option_id:
                 try:
-                    ydl_opts_fallback = {
+                    ydl_opts_fallback = get_ydl_opts({
                         'format': 'bestaudio/best',
                         'outtmpl': os.path.join(output_dir, f'%(title)s_{unique_suffix}.%(ext)s'),
                         'quiet': True,
                         'no_warnings': True,
-                    }
+                    })
                     with yt_dlp.YoutubeDL(ydl_opts_fallback) as ydl_fb:
                         info = ydl_fb.extract_info(url, download=True)
                         downloaded_file = None
